@@ -189,7 +189,7 @@ const VideoView = ({
         <div
             className={`${
                 mobileComments ? "w-screen" : "w-[calc(100%-500px)]"
-            } h-screen fixed left-0 overflow-hidden`}
+            } h-[100svh] fixed left-0 overflow-hidden`}
         >
             {/* 
                 The existence of two video elements causes bugs

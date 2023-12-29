@@ -116,7 +116,7 @@ const VideoData = ({
 
     return (
         <div
-            className={`max-w-[500px] w-[100%] h-screen fixed right-0 transition-transform ${
+            className={`max-w-[500px] w-[100%] h-[100svh] fixed right-0 transition-transform ${
                 mobileComments && !activeMobileComments
                     ? "translate-x-full"
                     : ""

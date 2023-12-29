@@ -141,7 +141,7 @@ const AuthPage = () => {
             />
 
             {/* content */}
-            <div className="bg-white flex justify-center items-center w-[80%] lg:w-[90%] h-[calc(100vh-100px)] max-h-[700px] relative rounded-xl overflow-hidden">
+            <div className="bg-white flex justify-center items-center w-[80%] lg:w-[90%] h-[calc(100svh-100px)] md:h-auto max-h-[700px] relative rounded-xl overflow-hidden">
                 <div className="flex-[1.1] md:hidden xl:flex-[1] h-full bg-gradient-to-br from-authform-1 to-authform-2 overflow-hidden relative flex justify-center items-center">
                     {/* inner blobs & showcase */}
                     <img

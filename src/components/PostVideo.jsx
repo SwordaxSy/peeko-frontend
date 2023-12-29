@@ -113,7 +113,7 @@ const PostVideo = ({
                     modalState
                         ? "top-1/2 -translate-y-1/2"
                         : "top-0 -translate-y-full"
-                } fixed left-1/2 -translate-x-1/2 -translate-y-1/2 aspect-[9/16] h-[calc(100vh-100px)] bg-primary-1 z-30 rounded-xl flex flex-col justify-evenly items-center transition`}
+                } fixed left-1/2 -translate-x-1/2 -translate-y-1/2 aspect-[9/16] h-[calc(100svh-200px)] bg-primary-1 z-30 rounded-xl flex flex-col justify-evenly items-center transition`}
             >
                 {previewSrc ? (
                     <div

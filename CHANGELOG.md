@@ -117,6 +117,7 @@ All changes applied on this project code base will be documented in this file.
     - Added placeholder video in case no videos are there to display
     - When post video popup is open, comments are closed on mobile mode
     - Fixed the comments not being darkened when post video modal is opened
+    - Improved application screen-size responsivity
     - Released the first beta version
 
 ## PLANNED TODOS
