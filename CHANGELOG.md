@@ -118,6 +118,7 @@ All changes applied on this project code base will be documented in this file.
     - When post video popup is open, comments are closed on mobile mode
     - Fixed the comments not being darkened when post video modal is opened
     - Improved application screen-size responsivity
+    - Added redirects file in public directory to prevent Page Not Found production error
     - Released the first beta version
 
 ## PLANNED TODOS
