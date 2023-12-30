@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useAuthContext from "./useAuthContext";
-import useAxios from "../hooks/useAxios";
+import useAxios from "./useAxios";
 
 export default function useActivate() {
     const [error, setError] = useState("");
@@ -23,8 +23,6 @@ export default function useActivate() {
                     localStorage.setItem("auth", JSON.stringify(newAuth));
                     setAuth(newAuth);
                 }
-
-                return data;
             })
             .catch((err) => {
                 if (err.response) {

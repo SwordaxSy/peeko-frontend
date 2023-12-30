@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useAuthContext from "./useAuthContext";
-import useAxios from "../hooks/useAxios";
+import useAxios from "./useAxios";
 
 export default function useAuthenticate() {
     const [error, setError] = useState("");

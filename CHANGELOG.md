@@ -121,6 +121,13 @@ All changes applied on this project code base will be documented in this file.
     - Added redirects file in public directory to prevent Page Not Found production error
     - Released the first beta version
 
+## [0.1.1-beta] - 2023-12-30
+
+### Changed
+
+-   Fixed import paths
+-   Removed unnecessary return statement
+
 ## PLANNED TODOS
 
     - Add profile page
