@@ -132,6 +132,7 @@ All changes applied on this project code base will be documented in this file.
     -   Fixed import paths
     -   Removed unnecessary return statement
     -   Fixed URL unintentionally changing when visiting specific video page
+    -   Repositioned the video progress bar to improve mobile responsivity
 
 ## PLANNED TODOS
 
