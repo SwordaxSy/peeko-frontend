@@ -125,8 +125,9 @@ All changes applied on this project code base will be documented in this file.
 
 ### Changed
 
--   Fixed import paths
--   Removed unnecessary return statement
+    -   Fixed import paths
+    -   Removed unnecessary return statement
+    -   Fixed URL unintentionally changing when visiting specific video page
 
 ## PLANNED TODOS
 

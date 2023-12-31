@@ -6,8 +6,12 @@ import Auth from "./pages/Auth";
 import Video from "./pages/Video";
 
 const App = () => {
-    const { auth } = useAuthContext();
+    const { auth, authLoading } = useAuthContext();
     const authrorized = auth?.userDocument?.activation?.activated || false;
+
+    if (authLoading) {
+        return <h1>Loading...</h1>;
+    }
 
     return (
         <div>
