@@ -134,6 +134,13 @@ All changes applied on this project code base will be documented in this file.
     -   Fixed URL unintentionally changing when visiting specific video page
     -   Repositioned the video progress bar to improve mobile responsivity
 
+## [0.2.0-beta] - 2023-12-31
+
+### Added
+
+    - Added a proper loading component and put it in use
+    - Added touch and mouse swiping capabilities
+
 ## PLANNED TODOS
 
     - Add profile page

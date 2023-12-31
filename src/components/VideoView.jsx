@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { useSwipe } from "../hooks/useSwipe";
 import { Link } from "react-router-dom";
+import { isMobile } from "react-device-detect";
+import { useSwipeable } from "react-swipeable";
+import { useSwipe } from "../hooks/useSwipe";
 
 import RangeInput from "./RangeInput";
 import Logo from "../assets/peeko-logo.png";
@@ -65,10 +67,6 @@ const VideoView = ({
     );
 
     // handlers
-    const handleVideoClick = (e) => {
-        if (e.target.id !== "seekBar") toggleVideo("main");
-    };
-
     const handleLoadedMetaData = () => {
         setDuration(video.current.duration);
         setShowComments(true);
@@ -169,9 +167,28 @@ const VideoView = ({
     const setCommentsMode = useCallback(() => {
         const screenWidth = window.innerWidth;
         const videoWidth = video.current.clientWidth;
-
         setMobileComments(videoWidth + 500 > screenWidth);
     }, [setMobileComments, video]);
+
+    const swipeHandler = useSwipeable({
+        onSwipedDown: () => {
+            if (swipeDisabled || prevSwipeDisabled) return;
+            swipe("prev");
+        },
+        onSwipedUp: () => {
+            if (swipeDisabled) return;
+            swipe("next");
+        },
+        onTap: ({ event }) => {
+            if (event.target.id !== "seekBar") {
+                toggleVideo("main");
+                event.preventDefault();
+            }
+        },
+        trackTouch: isMobile,
+        trackMouse: !isMobile,
+        preventScrollOnSwipe: true,
+    });
 
     // set event listeners
     useEffect(() => {
@@ -204,7 +221,7 @@ const VideoView = ({
             </video> */}
             <div
                 className="aspect-[9/16] h-full absolute left-1/2 -translate-x-1/2"
-                onClick={handleVideoClick}
+                {...swipeHandler}
             >
                 {/* video element */}
                 <video

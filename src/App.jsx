@@ -4,13 +4,14 @@ import useAuthContext from "./hooks/useAuthContext";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import Video from "./pages/Video";
+import Loading from "./components/Loading";
 
 const App = () => {
     const { auth, authLoading } = useAuthContext();
     const authrorized = auth?.userDocument?.activation?.activated || false;
 
     if (authLoading) {
-        return <h1>Loading...</h1>;
+        return <Loading />;
     }
 
     return (

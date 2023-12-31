@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useSwipe } from "../hooks/useSwipe";
+import Loading from "../components/Loading";
 
 const Home = () => {
     /**
@@ -20,7 +21,7 @@ const Home = () => {
         swipe("next");
     }, [swipe]);
 
-    return <></>;
+    return <Loading />;
 };
 
 export default Home;

@@ -1,6 +1,6 @@
 {
     "name": "peeko-frontend",
-    "version": "0.1.1-beta",
+    "version": "0.2.0-beta",
     "private": true,
     "dependencies": {
         "@testing-library/jest-dom": "^5.17.0",
@@ -9,10 +9,11 @@
         "axios": "^1.6.2",
         "date-fns": "^3.0.6",
         "react": "^18.2.0",
+        "react-device-detect": "^2.2.3",
         "react-dom": "^18.2.0",
-        "react-player": "^2.14.1",
         "react-router-dom": "^6.21.1",
         "react-scripts": "5.0.1",
+        "react-swipeable": "^7.0.1",
         "web-vitals": "^2.1.4"
     },
     "scripts": {
