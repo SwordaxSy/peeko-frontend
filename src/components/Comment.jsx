@@ -65,6 +65,7 @@ const Comment = ({
         <div
             className="flex flex-col py-3 relative"
             onContextMenu={handleContextMenu}
+            onDoubleClick={handleContextMenu}
         >
             <div className="top flex justify-center items-center w-fit gap-1">
                 <span className="material-symbols-outlined text-2xl">

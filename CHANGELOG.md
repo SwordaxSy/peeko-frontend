@@ -123,6 +123,10 @@ All changes applied on this project code base will be documented in this file.
 
 ## [0.1.1-beta] - 2023-12-30
 
+### Added
+
+    -   Delete comment by double clicking as an alias to contextmenu event
+
 ### Changed
 
     -   Fixed import paths
