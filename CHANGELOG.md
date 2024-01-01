@@ -163,6 +163,7 @@ All changes applied on this project code base will be documented in this file.
 ### Added
 
     - Added drop-shadow around video action buttons, video and user control buttons, and video stamps
+    - Added loading spinner while video is loading
 
 ### Changed
 

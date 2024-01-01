@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import useAxios from "./useAxios";
+import useViewStore from "../store/viewStore";
 
 export const useSwipe = () => {
     const navigate = useNavigate();
     const axios = useAxios();
+    const { setVideoIsLoading } = useViewStore();
 
     const [swipeDisabled, setSwipeDisabled] = useState(false);
     const [prevSwipeDisabled, setPrevSwipeDisabled] = useState(true);
@@ -50,6 +52,7 @@ export const useSwipe = () => {
         if (swipeDisabled) return;
         setSwipeDisabled(true);
         setLastSwipe(dir);
+        setVideoIsLoading(true);
 
         setTimeout(() => {
             setSwipeDisabled(false);

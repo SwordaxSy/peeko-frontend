@@ -23,14 +23,20 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
         lastSwipe,
     } = useSwipe();
 
-    const { duration, setDuration, currentTime, setCurrentTime, muted } =
-        useViewStore();
+    const {
+        duration,
+        setDuration,
+        currentTime,
+        setCurrentTime,
+        muted,
+        toggleVideo,
+        isPlaying,
+        videoIsLoading,
+        setVideoIsLoading,
+    } = useViewStore();
 
     const { setShowComments } = useDataStore();
-
     const { activateAlert } = useMiscStore();
-
-    const { toggleVideo, isPlaying } = useViewStore();
 
     const seek = useCallback(
         (direction) => {
@@ -58,6 +64,7 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
 
     const handleLoadedData = () => {
         setSwipeDisabled(false);
+        setVideoIsLoading(false);
     };
 
     const handleTimeUpdate = () => {
@@ -194,15 +201,23 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
                     Your browser does not support this video
                 </video>
 
-                {/* is playing icon */}
-                {/* keep this inside the video container because if it was clicked, it should toggle the video */}
-                <span
-                    className={`${
-                        isPlaying ? "opacity-0 pointer-events-none" : ""
-                    } material-symbols-outlined drop-shadow-3xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none text-8xl transition`}
-                >
-                    play_arrow
-                </span>
+                {videoIsLoading ? (
+                    // loading spinnner
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                        <span className="material-symbols-outlined drop-shadow-3xl select-none text-8xl transition animate-spin">
+                            progress_activity
+                        </span>
+                    </div>
+                ) : (
+                    // play button
+                    <span
+                        className={`${
+                            isPlaying ? "opacity-0 pointer-events-none" : ""
+                        } material-symbols-outlined drop-shadow-3xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none text-8xl transition`}
+                    >
+                        play_arrow
+                    </span>
+                )}
 
                 {/* shadow for mobile views */}
                 {mobileComments && (

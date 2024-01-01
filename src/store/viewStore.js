@@ -9,6 +9,11 @@ const useViewStore = create((set, get) => ({
         set({ isPlaying: newIsPlaying });
     },
 
+    videoIsLoading: true,
+    setVideoIsLoading: (newVideoIsLoading) => {
+        set({ videoIsLoading: newVideoIsLoading });
+    },
+
     muted: true,
     toggleMuted: () => {
         set((state) => ({ muted: !state.muted }));
