@@ -93,6 +93,7 @@
     );
 }
 
+/* loading bounce effect */
 @keyframes bounce {
     from {
         transform: scale(1);
@@ -107,4 +108,21 @@
     animation-direction: alternate;
     animation-timing-function: cubic-bezier(0.5, 0.05, 1, 0.5);
     animation-iteration-count: infinite;
+}
+
+/* dropdown triangle */
+.user-dropdown::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    background: linear-gradient(
+        to bottom left,
+        transparent 0%,
+        transparent 50%,
+        theme("colors.primary.1") 50%,
+        theme("colors.primary.1") 100%
+    );
 }

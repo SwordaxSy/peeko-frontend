@@ -4,86 +4,25 @@ import { useState, useRef } from "react";
 import PostVideo from "../components/PostVideo";
 import VideoView from "../components/VideoView";
 import VideoData from "../components/VideoData";
+import useMiscStore from "../store/miscStore";
 
 const Video = () => {
     const { videoKey } = useParams();
 
-    const [uploaderId, setUploaderId] = useState("");
-    const [showComments, setShowComments] = useState(false);
-    const [mobileComments, setMobileComments] = useState(false);
-    const [activeMobileComments, setActiveMobileComments] = useState(false);
+    const {
+        confirmationActive,
+        confirmationText,
+        alertActive,
+        alertTheme,
+        alertText,
+        deny,
+        confirm,
+    } = useMiscStore();
 
-    const [alertActive, setAlertActive] = useState(false);
-    const [alertTheme, setAlertTheme] = useState(null);
-    const [alertText, setAlertText] = useState("");
-
-    const confirmButton = useRef(null);
-    const dneyButton = useRef(null);
-    const [confirmationActive, setConfirmationActive] = useState(false);
-    const [confirmationText, setConfirmationText] = useState("");
+    const [mobileComments, setMobileComments] = useState(true);
 
     const video = useRef(null);
-    const [isPlaying, setIsPlaying] = useState(true);
-
     const previewVideo = useRef(null);
-    const [previewIsPlaying, setPreviewIsPlaying] = useState(false);
-
-    const [modalState, setModalState] = useState(false);
-
-    const toggleVideo = (target) => {
-        let targetVideo;
-        let targetSetFunction;
-
-        if (target === "main") {
-            targetVideo = video;
-            targetSetFunction = setIsPlaying;
-        } else if (target === "preview") {
-            targetVideo = previewVideo;
-            targetSetFunction = setPreviewIsPlaying;
-        } else {
-            throw Error("Target must be main or preview");
-        }
-
-        if (!targetVideo.current.paused) {
-            targetVideo.current.pause();
-        } else {
-            targetVideo.current.play();
-        }
-        targetSetFunction((prev) => !prev);
-    };
-
-    const openModal = () => {
-        setModalState(true);
-        setActiveMobileComments(false);
-        if (isPlaying) {
-            toggleVideo("main");
-        }
-    };
-
-    const confirmation = (text) => {
-        setConfirmationText(text);
-        setConfirmationActive(true);
-
-        return new Promise((res) => {
-            confirmButton.current.addEventListener("click", () => {
-                setConfirmationActive(false);
-                res(true);
-            });
-            dneyButton.current.addEventListener("click", () => {
-                setConfirmationActive(false);
-                res(false);
-            });
-        });
-    };
-
-    const activateAlert = (theme = "success") => {
-        setAlertActive(true);
-        setAlertTheme(theme);
-
-        setTimeout(() => {
-            setAlertActive(false);
-        }, 2000);
-    };
 
     return (
         <div className="bg-slate-800 h-[100svh] flex justify-center items-center text-white relative overflow-hidden">
@@ -116,14 +55,14 @@ const Video = () => {
                     <button
                         type="button"
                         className="hover:opacity-75 transition"
-                        ref={dneyButton}
+                        onClick={deny}
                     >
                         Cancel
                     </button>
                     <button
                         type="button"
                         className="hover:opacity-75 transition"
-                        ref={confirmButton}
+                        onClick={confirm}
                     >
                         Confirm
                     </button>
@@ -131,43 +70,14 @@ const Video = () => {
             </div>
 
             {/* main page content */}
-            <PostVideo
-                previewVideo={previewVideo}
-                isPlaying={isPlaying}
-                previewIsPlaying={previewIsPlaying}
-                toggleVideo={toggleVideo}
-                activateAlert={activateAlert}
-                setAlertText={setAlertText}
-                modalState={modalState}
-                setModalState={setModalState}
-            />
+            <PostVideo video={video} previewVideo={previewVideo} />
             <VideoView
                 videoKey={videoKey}
-                setShowComments={setShowComments}
-                activateAlert={activateAlert}
-                setAlertText={setAlertText}
+                video={video}
                 mobileComments={mobileComments}
                 setMobileComments={setMobileComments}
-                setActiveMobileComments={setActiveMobileComments}
-                uploaderId={uploaderId}
-                confirmation={confirmation}
-                video={video}
-                isPlaying={isPlaying}
-                toggleVideo={toggleVideo}
-                openModal={openModal}
             />
-            <VideoData
-                videoKey={videoKey}
-                showComments={showComments}
-                activateAlert={activateAlert}
-                setAlertText={setAlertText}
-                mobileComments={mobileComments}
-                setActiveMobileComments={setActiveMobileComments}
-                activeMobileComments={activeMobileComments}
-                setUploaderId={setUploaderId}
-                confirmation={confirmation}
-                toggleVideo={toggleVideo}
-            />
+            <VideoData videoKey={videoKey} mobileComments={mobileComments} />
         </div>
     );
 };

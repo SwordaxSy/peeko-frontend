@@ -1,32 +1,19 @@
-import { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useCallback } from "react";
 import { isMobile } from "react-device-detect";
 import { useSwipeable } from "react-swipeable";
 import { useSwipe } from "../hooks/useSwipe";
 
 import RangeInput from "./RangeInput";
-import Logo from "../assets/peeko-logo.png";
 import PlaceholderVideo from "../assets/placeholder.MOV";
 
-import useAuthContext from "../hooks/useAuthContext";
-import useAuthenticate from "../hooks/useAuthenticate";
-import useAxios from "../hooks/useAxios";
+import useVideoViewStore from "../store/videoViewStore";
+import useMiscStore from "../store/miscStore";
+import useVideoDataStore from "../store/videoDataStore";
+import UserControls from "./UserControls";
+import VideoControls from "./VideoControls";
+import VideoStamps from "./VideoStamps";
 
-const VideoView = ({
-    videoKey,
-    setShowComments,
-    setAlertText,
-    activateAlert,
-    mobileComments,
-    setMobileComments,
-    setActiveMobileComments,
-    uploaderId,
-    confirmation,
-    video,
-    isPlaying,
-    toggleVideo,
-    openModal,
-}) => {
+const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
     // hooks
     const {
         swipe,
@@ -35,18 +22,15 @@ const VideoView = ({
         prevSwipeDisabled,
         lastSwipe,
     } = useSwipe();
-    const { auth } = useAuthContext();
-    const { signout } = useAuthenticate();
-    const axios = useAxios();
 
-    // states
-    const [duration, setDuration] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [muted, setMuted] = useState(true);
-    const [dropdownActive, setDropdownActive] = useState(false);
-    const [deleteVideoEnabled, setDeleteVideoEnabled] = useState(true);
+    const { duration, setDuration, currentTime, setCurrentTime, muted } =
+        useVideoViewStore();
 
-    const ownPost = auth.userDocument._id === uploaderId;
+    const { setShowComments } = useVideoDataStore();
+
+    const { activateAlert } = useMiscStore();
+
+    const { toggleVideo, isPlaying } = useVideoViewStore();
 
     const seek = useCallback(
         (direction) => {
@@ -82,13 +66,14 @@ const VideoView = ({
 
     const handleSeekBarChange = (e) => {
         const seekTime = (video.current.duration / 100) * e.target.value;
-        video.current.currentTime = seekTime;
+        if (isFinite(seekTime)) {
+            video.current.currentTime = seekTime;
+        }
     };
 
     const handleVideoError = (e) => {
         console.error(e);
-        setAlertText("Failed to load video");
-        activateAlert("error");
+        activateAlert("Failed to load video", "error");
         swipe(lastSwipe);
     };
 
@@ -102,7 +87,7 @@ const VideoView = ({
                         )
                     )
                         break;
-                    toggleVideo("main");
+                    toggleVideo("main", video);
                     break;
                 }
                 case "ArrowRight": {
@@ -124,51 +109,14 @@ const VideoView = ({
                 default:
             }
         },
-        [swipe, seek, toggleVideo]
+        [swipe, seek, toggleVideo, video]
     );
-
-    const handleDeleteVideo = async () => {
-        setDeleteVideoEnabled(false);
-
-        const approval = await confirmation(
-            "Are you sure you want to delete your video?"
-        );
-        if (!approval) return setDeleteVideoEnabled(true);
-
-        axios
-            .delete(`/video/deleteVideo/${videoKey}`)
-            .then(({ data }) => {
-                if (data.success) {
-                    // clear session storage
-                    let videoKeys = JSON.parse(
-                        sessionStorage.getItem("videoKeys")
-                    );
-                    if (!videoKey) return;
-                    videoKeys = videoKeys.filter((key) => key !== videoKey);
-                    sessionStorage.setItem(
-                        "videoKeys",
-                        JSON.stringify(videoKeys)
-                    );
-
-                    // swipe to next video
-                    swipe("next");
-                }
-            })
-            .catch((err) => {
-                console.error(err);
-                setAlertText("Failed to delete video");
-                activateAlert("error");
-            })
-            .finally(() => {
-                setDeleteVideoEnabled(true);
-            });
-    };
 
     const setCommentsMode = useCallback(() => {
         const screenWidth = window.innerWidth;
         const videoWidth = video.current.clientWidth;
         setMobileComments(videoWidth + 500 > screenWidth);
-    }, [setMobileComments, video]);
+    }, [video, setMobileComments]);
 
     const swipeHandler = useSwipeable({
         onSwipedDown: () => {
@@ -181,7 +129,7 @@ const VideoView = ({
         },
         onTap: ({ event }) => {
             if (event.target.id !== "seekBar") {
-                toggleVideo("main");
+                toggleVideo("main", video);
                 event.preventDefault();
             }
         },
@@ -210,6 +158,7 @@ const VideoView = ({
         >
             {/* 
                 The existence of two video elements causes bugs
+                so it will be removed for now
             */}
             {/* <video
                 className="w-full blur-xl absolute top-1/2 -translate-y-1/2 brightness-[40%]"
@@ -261,105 +210,24 @@ const VideoView = ({
                     currentTime={currentTime}
                     duration={duration}
                 />
+
+                {/* shadow for mobile views */}
+                {mobileComments && (
+                    <div className="bg-gradient-to-t from-slate-800 to-transparent w-full h-16 absolute bottom-0"></div>
+                )}
             </div>
 
-            {/* open mobile comments button */}
-            {mobileComments && (
-                <span
-                    onClick={() => setActiveMobileComments(true)}
-                    className={`${
-                        ownPost ? "top-20" : "top-5"
-                    } right-5 material-symbols-outlined absolute select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center`}
-                >
-                    comment
-                </span>
-            )}
+            <VideoControls
+                videoKey={videoKey}
+                mobileComments={mobileComments}
+                swipe={swipe}
+                swipeDisabled={swipeDisabled}
+                prevSwipeDisabled={prevSwipeDisabled}
+            />
 
-            {/* navigators */}
-            <div className="absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-3">
-                <button
-                    type="button"
-                    disabled={swipeDisabled || prevSwipeDisabled}
-                    onClick={() => swipe("prev")}
-                    className="material-symbols-outlined disabled:opacity-50 disabled:pointer-events-none select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
-                >
-                    expand_less
-                </button>
-                <button
-                    type="button"
-                    disabled={swipeDisabled}
-                    onClick={() => swipe("next")}
-                    className="material-symbols-outlined disabled:opacity-50 disabled:pointer-events-none select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
-                >
-                    expand_more
-                </button>
-            </div>
+            <UserControls video={video} />
 
-            {/* mute / unmute */}
-            <button
-                type="button"
-                onClick={() => setMuted((prev) => !prev)}
-                className="material-symbols-outlined absolute bottom-5 right-5 select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
-            >
-                {muted ? "volume_off" : "volume_up"}
-            </button>
-
-            {/* delete video button */}
-            {ownPost && (
-                <button
-                    disabled={!deleteVideoEnabled}
-                    type="button"
-                    className="disabled:opacity-50 disabled:pointer-events-none material-symbols-outlined absolute top-5 right-5 selec-none transition cursor-pointer bg-[rgba(220,20,60,0.5)] hover:bg-[rgba(220,20,60,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-semibold"
-                    title="Delete Video"
-                    onClick={handleDeleteVideo}
-                >
-                    delete
-                </button>
-            )}
-
-            {/* logo & user */}
-            <div className="absolute top-3 left-3 flex items-start gap-2">
-                <Link to="/">
-                    <img src={Logo} alt="Peeko Logo" className="w-10 h-10" />
-                </Link>
-                <span
-                    className="material-symbols-outlined text-[2.5rem] select-none cursor-pointer relative"
-                    onClick={() => setDropdownActive((prev) => !prev)}
-                >
-                    account_circle
-                    <div
-                        className={`${
-                            dropdownActive
-                                ? ""
-                                : "opacity-0 pointer-events-none"
-                        } transition bg-slate-800 text-base absolute left-1/2 p-2 rounded-lg rounded-tl-none z-10 cursor-auto flex flex-col justify-center items-center`}
-                    >
-                        <p>{auth.userDocument.username}</p>
-                        <hr className="bg-white h-[2px] my-3 w-full" />
-                        <button
-                            onClick={signout}
-                            className="text-error w-full rounded-lg flex justify-center items-center py-1 hover:bg-[rgba(255,255,255,0.1)] transition"
-                            type="button"
-                            title="Sign Out"
-                        >
-                            <span className="material-symbols-outlined ">
-                                logout
-                            </span>
-                        </button>
-                    </div>
-                </span>
-            </div>
-
-            {/* show post modal button */}
-            <button
-                type="button"
-                onClick={openModal}
-                className="absolute w-16 h-16 bottom-4 left-4 rounded-full flex justify-center items-center bg-gradient-to-br from-primary-1 to-primary-2 hover:scale-90 transition cursor-pointer"
-            >
-                <span className="material-symbols-outlined text-5xl font-bold">
-                    add
-                </span>
-            </button>
+            {mobileComments && <VideoStamps viewMode="VideoView" />}
         </div>
     );
 };

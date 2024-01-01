@@ -2,18 +2,22 @@ import { formatDistanceToNow } from "date-fns";
 import { useEffect } from "react";
 import useAxios from "../hooks/useAxios";
 import useAuthContext from "../hooks/useAuthContext";
+import useVideoDataStore from "../store/videoDataStore";
+import useMiscStore from "../store/miscStore";
 
-const Comment = ({
-    commentDocument,
-    currentActiveDelete,
-    setCurrentActiveDelete,
-    confirmation,
-    activateAlert,
-    setAlertText,
-    setComments,
-}) => {
+const Comment = ({ commentDocument }) => {
     const axios = useAxios();
     const { auth } = useAuthContext();
+
+    const {
+        comments,
+        setComments,
+        setCommentsCount,
+        currentActiveDelete,
+        setCurrentActiveDelete,
+    } = useVideoDataStore();
+
+    const { confirmation, activateAlert } = useMiscStore();
 
     const handleContextMenu = (e) => {
         e.preventDefault();
@@ -32,19 +36,18 @@ const Comment = ({
             .delete(`/comment/deleteComment/${commentDocument._id}`)
             .then(({ data }) => {
                 if (data.success) {
-                    setComments((prev) =>
-                        prev.filter(
+                    setComments(
+                        comments.filter(
                             (comment) => comment._id !== commentDocument._id
                         )
                     );
-                    setAlertText("Comment deleted successfully");
-                    activateAlert();
+                    setCommentsCount(data.newCommentsCount);
+                    activateAlert("Comment deleted", "success");
                 }
             })
             .catch((err) => {
                 console.error(err);
-                setAlertText("Failed to delete comment");
-                activateAlert("error");
+                activateAlert("Failed to delete comment", "error");
             });
     };
 
@@ -88,7 +91,7 @@ const Comment = ({
                 onClick={handleDeleteComment}
                 className={`${
                     currentActiveDelete === commentDocument._id &&
-                    auth.userDocument._id === commentDocument.commentorId
+                    auth?.userDocument._id === commentDocument.commentorId
                         ? ""
                         : "opacity-0 pointer-events-none"
                 } w-full h-full absolute flex justify-center items-center rounded-lg bg-[rgba(220,20,60,0.8)] select-none cursor-pointer`}

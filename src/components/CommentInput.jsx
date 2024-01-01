@@ -1,10 +1,9 @@
-const CommentInput = ({
-    commentState,
-    setCommentState,
-    commentEnabled,
-    setCommentEnabled,
-    handleOnComment,
-}) => {
+import useVideoDataStore from "../store/videoDataStore";
+
+const CommentInput = ({ handleOnComment }) => {
+    const { comment, setComment, commentEnabled, setCommentEnabled } =
+        useVideoDataStore();
+
     const handleCommentStroke = (e) => {
         const commentContent = e.target.value;
 
@@ -14,12 +13,12 @@ const CommentInput = ({
             setCommentEnabled(false);
         }
 
-        setCommentState(commentContent);
+        setComment(commentContent);
     };
 
     const handleCommentKeyDown = (e) => {
         if (e.key === "Enter") {
-            handleOnComment(commentState);
+            handleOnComment(comment);
         }
     };
 
@@ -30,7 +29,7 @@ const CommentInput = ({
                 type="text"
                 className="comment-input w-[calc(100%-60px)] bg-transparent outline-none border-none text-white relative z-10"
                 placeholder="Type a comment..."
-                value={commentState}
+                value={comment}
                 onChange={handleCommentStroke}
                 onKeyDown={handleCommentKeyDown}
             />
@@ -39,7 +38,7 @@ const CommentInput = ({
                 type="button"
                 disabled={!commentEnabled}
                 className="disabled:opacity-70 disabled:pointer-events-none material-symbols-outlined relative z-10 text-3xl hover:opacity-70 transition-opacity cursor-pointer"
-                onClick={(e) => handleOnComment(commentState)}
+                onClick={(e) => handleOnComment(comment)}
             >
                 send
             </button>

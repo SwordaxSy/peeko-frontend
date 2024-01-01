@@ -141,7 +141,24 @@ All changes applied on this project code base will be documented in this file.
     - Added a proper loading component and put it in use
     - Added touch and mouse swiping capabilities
 
+## [0.3.0-beta] - 2023-1-1
+
+### Added
+
+    - Added zustand for state management
+    - Added video stamps and video actions on video view for mobile sizes
+    - Added numeral package to format likes and comments count
+    - Added delete message on delete video
+
+### Changed
+
+    - Refactored code & broke components down
+    - Fixed bug in video swiping
+    - Modified UI
+    - Uploaded video added to video key stack in sessionStorage
+
 ## PLANNED TODOS
 
+    - Add video description
     - Add profile page
     - Add profile settings

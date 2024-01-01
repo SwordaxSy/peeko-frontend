@@ -1,30 +1,36 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import RangeInput from "./RangeInput";
 import useAxios from "../hooks/useAxios";
+import { useSwipe } from "../hooks/useSwipe";
+import useVideoViewStore from "../store/videoViewStore";
+import useMiscStore from "../store/miscStore";
+import RangeInput from "./RangeInput";
 
-const PostVideo = ({
-    previewVideo,
-    isPlaying,
-    previewIsPlaying,
-    toggleVideo,
-    activateAlert,
-    setAlertText,
-    modalState,
-    setModalState,
-}) => {
+const PostVideo = ({ video, previewVideo }) => {
     const navigate = useNavigate();
     const axios = useAxios();
+    const { insertVideo } = useSwipe();
 
     const darken = useRef(null);
 
-    const [previewSrc, setPreviewSrc] = useState(null);
-    const [videoFile, setVideoFile] = useState("");
-    const [allowSubmit, setAllowSubmit] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const [duration, setDuration] = useState(null);
-    const [currentTime, setCurrentTime] = useState(null);
+    const {
+        isPlaying,
+        previewIsPlaying,
+        toggleVideo,
+        previewSrc,
+        setPreviewSrc,
+        videoFile,
+        setVideoFile,
+        allowSubmit,
+        setAllowSubmit,
+        previewDuration,
+        setPreviewDuration,
+        previewCurrentTime,
+        setPreviewCurrentTime,
+        isPosting,
+        setIsPosting,
+    } = useVideoViewStore();
+    const { activateAlert, modalState, closeModal } = useMiscStore();
 
     const handleOnChange = (e) => {
         const file = e.target.files[0];
@@ -38,11 +44,11 @@ const PostVideo = ({
     };
 
     const handleTimeUpdate = () => {
-        setCurrentTime(previewVideo.current.currentTime);
+        setPreviewCurrentTime(previewVideo.current.currentTime);
     };
 
     const handleLoadedMetaData = () => {
-        setDuration(previewVideo.current.duration);
+        setPreviewDuration(previewVideo.current.duration);
     };
 
     const handleSeekBarChange = (e) => {
@@ -52,7 +58,7 @@ const PostVideo = ({
 
     const handleVideoClick = (e) => {
         if (e.target.id !== "seekBar" && e.target.id !== "removeVideoButton")
-            toggleVideo("preview");
+            toggleVideo("preview", previewVideo);
     };
 
     const handleRemoveVideo = () => {
@@ -61,25 +67,10 @@ const PostVideo = ({
         setAllowSubmit(false);
     };
 
-    const closeModal = () => {
-        setModalState(false);
-
-        setPreviewSrc(null);
-        setVideoFile("");
-        setAllowSubmit(false);
-
-        setDuration(null);
-        setCurrentTime(null);
-
-        if (previewIsPlaying) {
-            toggleVideo("preview");
-        }
-    };
-
     const handlePostVideo = () => {
         if (!videoFile) return;
 
-        setIsLoading(true);
+        setIsPosting(true);
 
         const formData = new FormData();
         formData.append("videoFile", videoFile);
@@ -88,21 +79,20 @@ const PostVideo = ({
             .post(`/video/uploadVideo`, formData)
             .then(({ data }) => {
                 if (data.success) {
-                    setAlertText("Video Posted");
-                    activateAlert();
-                    navigate(`/video/${data.videoDocument.videoKey}`);
+                    activateAlert("Video posted", "success");
                     darken.current.click();
                     if (!isPlaying) {
-                        toggleVideo("main");
+                        toggleVideo("main", video);
                     }
+                    insertVideo(data.videoDocument.videoKey);
+                    navigate(`/video/${data.videoDocument.videoKey}`);
                 }
             })
             .catch((err) => {
                 console.error(err);
-                setAlertText("Failed to post video");
-                activateAlert("error");
+                activateAlert("Failed to post video", "error");
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => setIsPosting(false));
     };
 
     return (
@@ -131,7 +121,7 @@ const PostVideo = ({
                         </video>
 
                         {/* remove video button */}
-                        {!isLoading && (
+                        {!isPosting && (
                             <span
                                 className="material-symbols-outlined absolute text-error top-0 right-0 cursor-pointer transition hover:opacity-70"
                                 title="Remove Video"
@@ -156,8 +146,8 @@ const PostVideo = ({
                         {/* seek bar */}
                         <RangeInput
                             onChangeFunction={handleSeekBarChange}
-                            currentTime={currentTime}
-                            duration={duration}
+                            currentTime={previewCurrentTime}
+                            duration={previewDuration}
                         />
                     </div>
                 ) : (
@@ -182,11 +172,11 @@ const PostVideo = ({
 
                 <button
                     type="button"
-                    disabled={!allowSubmit || isLoading}
+                    disabled={!allowSubmit || isPosting}
                     className="bg-primary-2 w-4/6 p-4 text-xl font-bold rounded-lg transition hover:scale-105 disabled:opacity-50 disabled:pointer-events-none flex justify-center items-center"
                     onClick={handlePostVideo}
                 >
-                    {isLoading ? (
+                    {isPosting ? (
                         <span className="material-symbols-outlined animate-spin">
                             progress_activity
                         </span>
@@ -199,7 +189,7 @@ const PostVideo = ({
             {/* post modal dark background */}
             <div
                 ref={darken}
-                onClick={closeModal}
+                onClick={() => closeModal(previewVideo)}
                 className={`${
                     modalState ? "opacity-80" : "opacity-0 pointer-events-none"
                 } fixed top-0 left-0 w-screen h-screen bg-black z-20 transition`}

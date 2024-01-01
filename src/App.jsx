@@ -18,28 +18,13 @@ const App = () => {
         <div>
             <BrowserRouter>
                 <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            authrorized ? <Home /> : <Navigate to="/auth" />
-                        }
-                    />
+                    <Route path="/" element={<Home />} />
                     <Route
                         path="/auth"
                         element={!authrorized ? <Auth /> : <Navigate to="/" />}
                     />
-                    <Route
-                        path="/video"
-                        element={
-                            authrorized ? <Video /> : <Navigate to="/auth" />
-                        }
-                    />
-                    <Route
-                        path="/video/:videoKey"
-                        element={
-                            authrorized ? <Video /> : <Navigate to="/auth" />
-                        }
-                    />
+                    <Route path="/video" element={<Home />} />
+                    <Route path="/video/:videoKey" element={<Video />} />
                 </Routes>
             </BrowserRouter>
         </div>

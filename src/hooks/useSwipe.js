@@ -58,19 +58,15 @@ export const useSwipe = () => {
         const keys = JSON.parse(sessionStorage.getItem("videoKeys")) || [];
         const current = parseInt(sessionStorage.getItem("current")) || 0;
 
-        setPrevSwipeDisabled(current === 1 && dir === "prev");
+        setPrevSwipeDisabled(current <= 1 && dir === "prev");
 
         switch (dir) {
             case "prev": {
-                if (current > 0) {
+                if (!prevSwipeDisabled) {
                     const prevIndex = current - 1;
                     sessionStorage.setItem("current", prevIndex);
 
                     navigate(`/video/${keys[prevIndex]}`);
-                } else {
-                    throw Error(
-                        "Current key is at index 0, no previous videos exist"
-                    );
                 }
                 break;
             }
@@ -96,6 +92,13 @@ export const useSwipe = () => {
         }
     };
 
+    const insertVideo = (videoKey) => {
+        const keys = JSON.parse(sessionStorage.getItem("videoKeys")) || [];
+        const current = parseInt(sessionStorage.getItem("current")) || 0;
+        keys.splice(current, 0, videoKey);
+        sessionStorage.setItem("videoKeys", JSON.stringify(keys));
+    };
+
     return {
         swipe,
         fillQueue,
@@ -104,5 +107,6 @@ export const useSwipe = () => {
         prevSwipeDisabled,
         setPrevSwipeDisabled,
         lastSwipe,
+        insertVideo,
     };
 };
