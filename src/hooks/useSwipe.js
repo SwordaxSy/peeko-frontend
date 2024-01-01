@@ -52,7 +52,6 @@ export const useSwipe = () => {
         if (swipeDisabled) return;
         setSwipeDisabled(true);
         setLastSwipe(dir);
-        setVideoIsLoading(true);
 
         setTimeout(() => {
             setSwipeDisabled(false);
@@ -69,6 +68,15 @@ export const useSwipe = () => {
                     const prevIndex = current - 1;
                     sessionStorage.setItem("current", prevIndex);
 
+                    // if the same video is going to be requested
+                    // then the onLoadedData function responsible for
+                    // setVideoIsLoading(false) is not going to run
+                    // causing the loading spinner to stay
+                    // hence the following if condition :
+                    if (keys[current] !== keys[prevIndex]) {
+                        setVideoIsLoading(true);
+                    }
+
                     navigate(`/video/${keys[prevIndex]}`);
                 }
                 break;
@@ -78,11 +86,19 @@ export const useSwipe = () => {
                     const nextIndex = current + 1;
                     sessionStorage.setItem("current", nextIndex);
 
+                    if (keys[current] !== keys[nextIndex]) {
+                        setVideoIsLoading(true);
+                    }
+
                     navigate(`/video/${keys[nextIndex]}`);
 
                     if (keys.length - nextIndex <= 4) await fillQueue();
                 } else {
                     const key = await fillQueue();
+
+                    if (keys[current] !== key) {
+                        setVideoIsLoading(true);
+                    }
 
                     if (key || key === undefined) {
                         navigate(`/video/${key}`);
