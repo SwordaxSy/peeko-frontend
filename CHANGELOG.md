@@ -154,6 +154,7 @@ All changes applied on this project code base will be documented in this file.
 
     - Refactored code & broke components down
     - Fixed bug in video swiping
+    - Allowed users to access video page without authentication
     - Modified UI
     - Uploaded video added to video key stack in sessionStorage
 

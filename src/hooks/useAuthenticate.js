@@ -1,11 +1,13 @@
 import { useState } from "react";
 import useAuthContext from "./useAuthContext";
 import useAxios from "./useAxios";
+import { useNavigate } from "react-router-dom";
 
 export default function useAuthenticate() {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const axios = useAxios();
+    const navigate = useNavigate();
 
     const { setAuth } = useAuthContext();
 
@@ -49,6 +51,7 @@ export default function useAuthenticate() {
     const signout = () => {
         localStorage.removeItem("auth");
         setAuth(null);
+        navigate("/auth");
     };
 
     return { authenticate, signout, error, setError, isLoading, setIsLoading };
