@@ -6,9 +6,9 @@ import { useSwipe } from "../hooks/useSwipe";
 import RangeInput from "./RangeInput";
 import PlaceholderVideo from "../assets/placeholder.MOV";
 
-import useVideoViewStore from "../store/videoViewStore";
+import useViewStore from "../store/viewStore";
 import useMiscStore from "../store/miscStore";
-import useVideoDataStore from "../store/videoDataStore";
+import useDataStore from "../store/dataStore";
 import UserControls from "./UserControls";
 import VideoControls from "./VideoControls";
 import VideoStamps from "./VideoStamps";
@@ -24,13 +24,13 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
     } = useSwipe();
 
     const { duration, setDuration, currentTime, setCurrentTime, muted } =
-        useVideoViewStore();
+        useViewStore();
 
-    const { setShowComments } = useVideoDataStore();
+    const { setShowComments } = useDataStore();
 
     const { activateAlert } = useMiscStore();
 
-    const { toggleVideo, isPlaying } = useVideoViewStore();
+    const { toggleVideo, isPlaying } = useViewStore();
 
     const seek = useCallback(
         (direction) => {
@@ -185,7 +185,7 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
                     onTimeUpdate={handleTimeUpdate}
                     onError={handleVideoError}
                     onLoadedData={handleLoadedData}
-                    autoPlay={isPlaying}
+                    autoPlay={true}
                     muted={muted}
                     crossOrigin="anonymous"
                     loop
@@ -199,10 +199,18 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
                 <span
                     className={`${
                         isPlaying ? "opacity-0 pointer-events-none" : ""
-                    } material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none text-8xl transition`}
+                    } material-symbols-outlined drop-shadow-3xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none text-8xl transition`}
                 >
                     play_arrow
                 </span>
+
+                {/* shadow for mobile views */}
+                {mobileComments && (
+                    <>
+                        <div className="bg-gradient-to-b from-slate-800 to-transparent w-full h-16 absolute top-0"></div>
+                        <div className="bg-gradient-to-t from-slate-800 to-transparent w-full h-16 absolute bottom-0"></div>
+                    </>
+                )}
 
                 {/* seek bar */}
                 <RangeInput
@@ -210,11 +218,6 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
                     currentTime={currentTime}
                     duration={duration}
                 />
-
-                {/* shadow for mobile views */}
-                {mobileComments && (
-                    <div className="bg-gradient-to-t from-slate-800 to-transparent w-full h-16 absolute bottom-0"></div>
-                )}
             </div>
 
             <VideoControls

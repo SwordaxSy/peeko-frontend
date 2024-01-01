@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 import { useSwipe } from "../hooks/useSwipe";
-import useVideoViewStore from "../store/videoViewStore";
+import useViewStore from "../store/viewStore";
 import useMiscStore from "../store/miscStore";
 import RangeInput from "./RangeInput";
 
@@ -29,8 +29,9 @@ const PostVideo = ({ video, previewVideo }) => {
         setPreviewCurrentTime,
         isPosting,
         setIsPosting,
-    } = useVideoViewStore();
-    const { activateAlert, modalState, closeModal } = useMiscStore();
+        closeModal,
+    } = useViewStore();
+    const { activateAlert, modalState } = useMiscStore();
 
     const handleOnChange = (e) => {
         const file = e.target.files[0];
@@ -115,7 +116,7 @@ const PostVideo = ({ video, previewVideo }) => {
                             src={previewSrc}
                             onLoadedMetadata={handleLoadedMetaData}
                             onTimeUpdate={handleTimeUpdate}
-                            autoPlay={previewIsPlaying}
+                            autoPlay={false}
                         >
                             Your browser does not support this video
                         </video>

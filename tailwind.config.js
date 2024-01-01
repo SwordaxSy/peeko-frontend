@@ -15,6 +15,9 @@ module.exports = {
                 error: "crimson",
                 success: "rgb(20, 220, 60)",
             },
+            dropShadow: {
+                "3xl": "0 0 0.2rem rgba(0, 0, 0, 0.6)",
+            },
         },
         screens: {
             xl: { max: "1279px" },

@@ -1,9 +1,9 @@
-import useVideoDataStore from "../store/videoDataStore";
+import useDataStore from "../store/dataStore";
 import VideoActions from "./VideoActions";
 import VideoStamps from "./VideoStamps";
 
 const VideoDataHeader = ({ videoKey, mobileComments }) => {
-    const { setActiveMobileComments } = useVideoDataStore();
+    const { setActiveMobileComments } = useDataStore();
 
     return (
         <div className="flex justify-between items-center h-[100px] overflow-x-auto comments-top">

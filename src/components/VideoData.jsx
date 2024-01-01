@@ -4,7 +4,7 @@ import useAxios from "../hooks/useAxios";
 
 import Comment from "./Comment";
 import CommentInput from "./CommentInput";
-import useVideoDataStore from "../store/videoDataStore";
+import useDataStore from "../store/dataStore";
 import VideoDataHeader from "./VideoDataHeader";
 
 const VideoData = ({ videoKey, mobileComments }) => {
@@ -26,7 +26,7 @@ const VideoData = ({ videoKey, mobileComments }) => {
         setCommentEnabled,
         setComment,
         activeMobileComments,
-    } = useVideoDataStore();
+    } = useDataStore();
 
     // onComment state change
     const handleOnComment = (comment) => {

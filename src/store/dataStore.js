@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import useMiscStore from "./miscStore";
 
-const useVideoDataStore = create((set) => ({
+const useDataStore = create((set, get) => ({
     uploaderId: "",
     setUploaderId: (newUploaderId) => {
         set({ uploaderId: newUploaderId });
@@ -27,19 +27,46 @@ const useVideoDataStore = create((set) => ({
         set({ liked: newLiked });
     },
 
+    feedbackDisabled: false,
+    setFeedbackDisabled: (newFeedbackDisabled) => {
+        set({ feedbackDisabled: newFeedbackDisabled });
+    },
     feedback: (videoKey, axios) => {
+        if (get().feedbackDisabled) return;
+        get().setFeedbackDisabled(true);
+
+        // instantaneously update the like state
+        set((state) => ({
+            liked: !state.liked,
+            likesCount: state.likesCount + (state.liked ? -1 : 1),
+        }));
+
         axios
             .put(`/feedback/toggleLike`, { videoKey })
             .then(({ data }) => {
-                if (data.success) {
-                    set({
-                        liked: data.operation === "LIKE",
-                        likesCount: data.likesCount,
-                    });
+                if (!data.success) {
+                    // if failed to perform feedback operation, undo like state change
+                    set((state) => ({
+                        liked: !state.liked,
+                        likesCount: state.likesCount + (state.liked ? -1 : 1),
+                    }));
+
+                    // alert user of failure
+                    useMiscStore
+                        .getState()
+                        .activateAlert(
+                            `Failed to ${
+                                get().liked ? "unlike" : "like"
+                            } video`,
+                            "error"
+                        );
                 }
             })
             .catch((err) => {
                 console.error(err);
+            })
+            .finally(() => {
+                get().setFeedbackDisabled(false);
             });
     },
 
@@ -102,4 +129,4 @@ const useVideoDataStore = create((set) => ({
     },
 }));
 
-export default useVideoDataStore;
+export default useDataStore;

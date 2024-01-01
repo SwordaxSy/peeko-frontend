@@ -1,6 +1,6 @@
 import numeral from "numeral";
 import useAxios from "../hooks/useAxios";
-import useVideoDataStore from "../store/videoDataStore";
+import useDataStore from "../store/dataStore";
 import useAuthContext from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +15,7 @@ const VideoActions = ({ videoKey, viewMode }) => {
         commentsCount,
         share,
         setActiveMobileComments,
-    } = useVideoDataStore();
+    } = useDataStore();
 
     return (
         <div
@@ -28,13 +28,15 @@ const VideoActions = ({ videoKey, viewMode }) => {
                 className="p-3 rounded-lg flex flex-col justify-center items-center hover:bg-[rgba(255,255,255,0.1)] transition cursor-pointer"
             >
                 <span
-                    className={`material-icons-outlined transition ${
+                    className={`material-icons-outlined transition drop-shadow-3xl text-3xl ${
                         liked ? "text-error" : ""
                     }`}
                 >
                     {liked ? "favorite" : "favorite_border"}
                 </span>
-                <p>{numeral(likesCount).format("0a")}</p>
+                <p className="drop-shadow-3xl text-xl">
+                    {numeral(likesCount).format("0a")}
+                </p>
             </div>
 
             <div
@@ -49,15 +51,21 @@ const VideoActions = ({ videoKey, viewMode }) => {
                         : null
                 }
             >
-                <span className="material-symbols-outlined">chat</span>
-                <p>{numeral(commentsCount).format("0a")}</p>
+                <span className="material-symbols-outlined drop-shadow-3xl text-3xl">
+                    chat
+                </span>
+                <p className="drop-shadow-3xl text-xl">
+                    {numeral(commentsCount).format("0a")}
+                </p>
             </div>
 
             <div
                 onClick={() => share(videoKey)}
                 className="p-3 rounded-lg hover:bg-[rgba(255,255,255,0.1)] transition cursor-pointer"
             >
-                <span className="material-symbols-outlined">share</span>
+                <span className="material-symbols-outlined drop-shadow-3xl text-3xl">
+                    share
+                </span>
             </div>
         </div>
     );

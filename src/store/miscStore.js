@@ -1,8 +1,6 @@
 import { create } from "zustand";
-import useVideoDataStore from "./videoDataStore";
-import useVideoViewStore from "./videoViewStore";
 
-const useMiscStore = create((set) => ({
+const useMiscStore = create((set, get) => ({
     // alert
     alertActive: false,
     alertText: "",
@@ -31,12 +29,12 @@ const useMiscStore = create((set) => ({
 
     confirm: () => {
         set({ confirmationActive: false });
-        useMiscStore.getState().resolve(true);
+        get().resolve(true);
     },
 
     deny: () => {
         set({ confirmationActive: false });
-        useMiscStore.getState().resolve(false);
+        get().resolve(false);
     },
 
     // dropdown
@@ -49,42 +47,6 @@ const useMiscStore = create((set) => ({
     modalState: false,
     setModalState: (newModalState) => {
         set({ modalState: newModalState });
-    },
-    openModal: (videoRef) => {
-        const { isPlaying, toggleVideo } = useVideoViewStore.getState();
-        const setActiveMobileComments =
-            useVideoDataStore.getState().setActiveMobileComments;
-
-        set({ modalState: true });
-        setActiveMobileComments(false);
-
-        if (isPlaying) {
-            toggleVideo("main", videoRef);
-        }
-    },
-    closeModal: (videoRef) => {
-        const {
-            setPreviewSrc,
-            setVideoFile,
-            setAllowSubmit,
-            setPreviewDuration,
-            setPreviewCurrentTime,
-            previewIsPlaying,
-            toggleVideo,
-        } = useVideoViewStore.getState();
-
-        set({ modalState: false });
-
-        setPreviewSrc(null);
-        setVideoFile("");
-        setAllowSubmit(false);
-
-        setPreviewDuration(0);
-        setPreviewCurrentTime(0);
-
-        if (previewIsPlaying) {
-            toggleVideo("preview", videoRef);
-        }
     },
 }));
 

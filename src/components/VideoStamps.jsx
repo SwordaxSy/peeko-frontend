@@ -1,8 +1,8 @@
 import { formatDistanceToNow } from "date-fns";
-import useVideoDataStore from "../store/videoDataStore";
+import useDataStore from "../store/dataStore";
 
 const VideoStamps = ({ viewMode }) => {
-    const { uploaderUsername, timestamp } = useVideoDataStore();
+    const { uploaderUsername, timestamp } = useDataStore();
 
     return (
         <div
@@ -10,13 +10,15 @@ const VideoStamps = ({ viewMode }) => {
                 viewMode === "VideoView" ? "absolute bottom-3 left-3" : ""
             }`}
         >
-            <span className="material-symbols-outlined text-5xl select-none">
+            <span className="material-symbols-outlined drop-shadow-3xl text-5xl select-none">
                 account_circle
             </span>
 
             <div>
-                <p className="font-bold text-lg">{uploaderUsername}</p>
-                <p className="text-sm text-[rgba(255,255,255,0.7)]">
+                <p className="font-bold text-lg drop-shadow-3xl">
+                    {uploaderUsername}
+                </p>
+                <p className="text-sm text-[rgba(255,255,255,0.7)] drop-shadow-3xl">
                     {formatDistanceToNow(new Date(timestamp), {
                         addSuffix: true,
                     })}

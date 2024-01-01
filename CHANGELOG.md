@@ -158,6 +158,19 @@ All changes applied on this project code base will be documented in this file.
     - Modified UI
     - Uploaded video added to video key stack in sessionStorage
 
+## [0.3.1-beta] - 2023-1-1
+
+### Added
+
+    - Added drop-shadow around video action buttons, video and user control buttons, and video stamps
+
+### Changed
+
+    - Fixed seekbar hidden under shadow
+    - Fixed bug, play button not binding with video play/pause state
+    - Modified font-size and position of video action buttons for mobile devices
+    - Instantly update like state without waiting response
+
 ## PLANNED TODOS
 
     - Add video description

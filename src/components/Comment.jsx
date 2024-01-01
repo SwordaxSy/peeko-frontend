@@ -2,7 +2,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useEffect } from "react";
 import useAxios from "../hooks/useAxios";
 import useAuthContext from "../hooks/useAuthContext";
-import useVideoDataStore from "../store/videoDataStore";
+import useDataStore from "../store/dataStore";
 import useMiscStore from "../store/miscStore";
 
 const Comment = ({ commentDocument }) => {
@@ -15,7 +15,7 @@ const Comment = ({ commentDocument }) => {
         setCommentsCount,
         currentActiveDelete,
         setCurrentActiveDelete,
-    } = useVideoDataStore();
+    } = useDataStore();
 
     const { confirmation, activateAlert } = useMiscStore();
 

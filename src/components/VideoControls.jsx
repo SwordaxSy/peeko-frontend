@@ -1,8 +1,8 @@
 import useAuthContext from "../hooks/useAuthContext";
 import useAxios from "../hooks/useAxios";
 import useMiscStore from "../store/miscStore";
-import useVideoDataStore from "../store/videoDataStore";
-import useVideoViewStore from "../store/videoViewStore";
+import useDataStore from "../store/dataStore";
+import useViewStore from "../store/viewStore";
 import VideoActions from "./VideoActions";
 
 const VideoControls = ({
@@ -15,8 +15,8 @@ const VideoControls = ({
     const axios = useAxios();
     const { auth } = useAuthContext();
     const { muted, toggleMuted, deleteVideoEnabled, setDeleteVideoEnabled } =
-        useVideoViewStore();
-    const { uploaderId } = useVideoDataStore();
+        useViewStore();
+    const { uploaderId } = useDataStore();
     const { confirmation, activateAlert } = useMiscStore();
 
     const ownPost = auth?.userDocument._id === uploaderId;
@@ -66,7 +66,7 @@ const VideoControls = ({
                 <button
                     disabled={!deleteVideoEnabled}
                     type="button"
-                    className="disabled:opacity-50 disabled:pointer-events-none material-symbols-outlined absolute top-5 right-5 selec-none transition cursor-pointer bg-[rgba(220,20,60,0.5)] hover:bg-[rgba(220,20,60,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-semibold"
+                    className="drop-shadow-3xl disabled:opacity-50 disabled:pointer-events-none material-symbols-outlined absolute top-5 right-5 selec-none transition cursor-pointer bg-[rgba(220,20,60,0.5)] hover:bg-[rgba(220,20,60,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-semibold"
                     title="Delete Video"
                     onClick={handleDeleteVideo}
                 >
@@ -75,7 +75,7 @@ const VideoControls = ({
             )}
 
             {/* desktop navigators, mobile comment & like buttons */}
-            <div className="absolute right-5 top-1/2 -translate-y-1/2 flex flex-col gap-3">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col gap-3">
                 {mobileComments ? (
                     <VideoActions videoKey={videoKey} viewMode="vertical" />
                 ) : (
@@ -84,7 +84,7 @@ const VideoControls = ({
                             type="button"
                             disabled={swipeDisabled || prevSwipeDisabled}
                             onClick={() => swipe("prev")}
-                            className="material-symbols-outlined disabled:opacity-50 disabled:pointer-events-none select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
+                            className="material-symbols-outlined drop-shadow-3xl disabled:opacity-50 disabled:pointer-events-none select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
                         >
                             expand_less
                         </button>
@@ -92,7 +92,7 @@ const VideoControls = ({
                             type="button"
                             disabled={swipeDisabled}
                             onClick={() => swipe("next")}
-                            className="material-symbols-outlined disabled:opacity-50 disabled:pointer-events-none select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
+                            className="material-symbols-outlined drop-shadow-3xl disabled:opacity-50 disabled:pointer-events-none select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
                         >
                             expand_more
                         </button>
@@ -104,7 +104,7 @@ const VideoControls = ({
             <button
                 type="button"
                 onClick={toggleMuted}
-                className="material-symbols-outlined absolute bottom-5 right-5 select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
+                className="material-symbols-outlined drop-shadow-3xl absolute bottom-5 right-5 select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
             >
                 {muted ? "volume_off" : "volume_up"}
             </button>

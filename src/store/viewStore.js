@@ -1,10 +1,12 @@
 import { create } from "zustand";
+import useMiscStore from "./miscStore";
+import useDataStore from "./dataStore";
 
-const useVideoViewStore = create((set) => ({
+const useViewStore = create((set, get) => ({
     // main
     isPlaying: true,
-    toggleIsPlaying: () => {
-        set((state) => ({ isPlaying: !state.isPlaying }));
+    setIsPlaying: (newIsPlaying) => {
+        set({ isPlaying: newIsPlaying });
     },
 
     muted: true,
@@ -29,8 +31,8 @@ const useVideoViewStore = create((set) => ({
 
     // preview
     previewIsPlaying: false,
-    togglePreviewIsPlaying: () => {
-        set((state) => ({ previewIsPlaying: !state.previewIsPlaying }));
+    setPreviewIsPlaying: (newPreviewIsPlaying) => {
+        set({ previewIsPlaying: newPreviewIsPlaying });
     },
 
     previewSrc: "",
@@ -65,24 +67,57 @@ const useVideoViewStore = create((set) => ({
 
     // common
     toggleVideo: (targetName, targetRef) => {
-        const currentState = useVideoViewStore.getState();
-        let targetToggleFunction;
+        const currentState = get();
+        let targetSetFunction;
 
         if (targetName === "main") {
-            targetToggleFunction = currentState.toggleIsPlaying;
+            targetSetFunction = currentState.setIsPlaying;
         } else if (targetName === "preview") {
-            targetToggleFunction = currentState.togglePreviewIsPlaying;
+            targetSetFunction = currentState.setPreviewIsPlaying;
         } else {
             throw Error("Target must be main or preview");
         }
 
         if (!targetRef.current.paused) {
             targetRef.current.pause();
+            targetSetFunction(false);
         } else {
             targetRef.current.play();
+            targetSetFunction(true);
         }
-        targetToggleFunction();
+    },
+
+    // modal functions
+    openModal: (videoRef) => {
+        const { isPlaying, toggleVideo } = get();
+        const { setActiveMobileComments } = useDataStore.getState();
+        const { setModalState } = useMiscStore.getState();
+
+        setModalState(true);
+        setActiveMobileComments(false);
+
+        if (isPlaying) {
+            toggleVideo("main", videoRef);
+        }
+    },
+    closeModal: (videoRef) => {
+        const { previewIsPlaying, toggleVideo } = get();
+        const { setModalState } = useMiscStore.getState();
+
+        setModalState(false);
+
+        set({
+            previewSrc: null,
+            videoFile: null,
+            allowSubmit: false,
+            previewDuration: 0,
+            previewCurrentTime: 0,
+        });
+
+        if (previewIsPlaying) {
+            toggleVideo("preview", videoRef);
+        }
     },
 }));
 
-export default useVideoViewStore;
+export default useViewStore;

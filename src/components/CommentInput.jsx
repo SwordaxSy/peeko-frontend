@@ -1,8 +1,8 @@
-import useVideoDataStore from "../store/videoDataStore";
+import useDataStore from "../store/dataStore";
 
 const CommentInput = ({ handleOnComment }) => {
     const { comment, setComment, commentEnabled, setCommentEnabled } =
-        useVideoDataStore();
+        useDataStore();
 
     const handleCommentStroke = (e) => {
         const commentContent = e.target.value;
