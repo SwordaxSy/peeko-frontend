@@ -12,8 +12,16 @@ export const useSwipe = () => {
     const [prevSwipeDisabled, setPrevSwipeDisabled] = useState(true);
     const [lastSwipe, setLastSwipe] = useState("next");
 
+    const swipeNavigate = (currentKey, targetKey) => {
+        if (currentKey !== targetKey) {
+            setVideoIsLoading(true);
+        }
+
+        navigate(`/video/${targetKey}`);
+    };
+
     const fillQueue = async (val = 10) => {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             axios
                 .get(`/video/getVideos/${val}`)
                 .then(({ data }) => {
@@ -39,7 +47,7 @@ export const useSwipe = () => {
                         }
 
                         resolve(returnValue);
-                    } else throw Error("Filling Queue Failed");
+                    } else reject("Filling Queue Failed");
                 })
                 .catch((err) => {
                     console.error(err);
@@ -68,16 +76,7 @@ export const useSwipe = () => {
                     const prevIndex = current - 1;
                     sessionStorage.setItem("current", prevIndex);
 
-                    // if the same video is going to be requested
-                    // then the onLoadedData function responsible for
-                    // setVideoIsLoading(false) is not going to run
-                    // causing the loading spinner to stay
-                    // hence the following if condition :
-                    if (keys[current] !== keys[prevIndex]) {
-                        setVideoIsLoading(true);
-                    }
-
-                    navigate(`/video/${keys[prevIndex]}`);
+                    swipeNavigate(keys[current], keys[prevIndex]);
                 }
                 break;
             }
@@ -86,22 +85,14 @@ export const useSwipe = () => {
                     const nextIndex = current + 1;
                     sessionStorage.setItem("current", nextIndex);
 
-                    if (keys[current] !== keys[nextIndex]) {
-                        setVideoIsLoading(true);
-                    }
-
-                    navigate(`/video/${keys[nextIndex]}`);
+                    swipeNavigate(keys[current], keys[nextIndex]);
 
                     if (keys.length - nextIndex <= 4) await fillQueue();
                 } else {
                     const key = await fillQueue();
 
-                    if (keys[current] !== key) {
-                        setVideoIsLoading(true);
-                    }
-
                     if (key || key === undefined) {
-                        navigate(`/video/${key}`);
+                        swipeNavigate(keys[current], key);
                     }
                 }
                 break;

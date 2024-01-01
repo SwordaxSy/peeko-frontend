@@ -116,7 +116,7 @@ const PostVideo = ({ video, previewVideo }) => {
                             src={previewSrc}
                             onLoadedMetadata={handleLoadedMetaData}
                             onTimeUpdate={handleTimeUpdate}
-                            autoPlay={false}
+                            autoPlay={previewIsPlaying}
                         >
                             Your browser does not support this video
                         </video>

@@ -192,7 +192,7 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
                     onTimeUpdate={handleTimeUpdate}
                     onError={handleVideoError}
                     onLoadedData={handleLoadedData}
-                    autoPlay={true}
+                    autoPlay={isPlaying}
                     muted={muted}
                     crossOrigin="anonymous"
                     loop
