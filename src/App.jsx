@@ -7,8 +7,7 @@ import Video from "./pages/Video";
 import Loading from "./components/Loading";
 
 const App = () => {
-    const { auth, authLoading } = useAuthContext();
-    const authrorized = auth?.userDocument?.activation?.activated || false;
+    const { authLoading, authorized } = useAuthContext();
 
     if (authLoading) {
         return <Loading />;
@@ -21,7 +20,7 @@ const App = () => {
                     <Route path="/" element={<Home />} />
                     <Route
                         path="/auth"
-                        element={!authrorized ? <Auth /> : <Navigate to="/" />}
+                        element={!authorized ? <Auth /> : <Navigate to="/" />}
                     />
                     <Route path="/video" element={<Home />} />
                     <Route path="/video/:videoKey" element={<Video />} />

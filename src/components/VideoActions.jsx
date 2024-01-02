@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const VideoActions = ({ videoKey, viewMode }) => {
     const axios = useAxios();
-    const { auth } = useAuthContext();
+    const { authorized } = useAuthContext();
     const navigate = useNavigate();
     const {
         feedback,
@@ -23,7 +23,7 @@ const VideoActions = ({ videoKey, viewMode }) => {
         >
             <div
                 onClick={() =>
-                    auth ? feedback(videoKey, axios) : navigate("/auth")
+                    authorized ? feedback(videoKey, axios) : navigate("/auth")
                 }
                 className="p-3 rounded-lg flex flex-col justify-center items-center hover:bg-[rgba(255,255,255,0.1)] transition cursor-pointer"
             >

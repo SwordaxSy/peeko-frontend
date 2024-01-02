@@ -172,6 +172,13 @@ All changes applied on this project code base will be documented in this file.
     - Modified font-size and position of video action buttons for mobile devices
     - Instantly update like state without waiting response
 
+## [0.3.2-beta] - 2023-1-2
+
+### Changed
+
+    - Fixed unactivated users being able to send comment & feedback requests to backend server
+    - Fixed undo feedback not working on feedback failure
+
 ## PLANNED TODOS
 
     - Add video description

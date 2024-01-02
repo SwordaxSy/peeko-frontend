@@ -31,7 +31,7 @@ const AuthPage = () => {
     ]);
 
     const { authenticate, error, setError, isLoading } = useAuthenticate();
-    const { auth } = useAuthContext();
+    const { auth, authorized } = useAuthContext();
 
     const handleUsernameStroke = (e) => {
         const newUsername = e.target.value;
@@ -162,7 +162,7 @@ const AuthPage = () => {
                 </div>
 
                 {/* authentication & activation sections */}
-                {auth && !auth.userDocument.activation.activated ? (
+                {auth && !authorized ? (
                     <ActivationSection />
                 ) : (
                     <form

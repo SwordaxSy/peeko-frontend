@@ -9,7 +9,7 @@ import VideoDataHeader from "./VideoDataHeader";
 
 const VideoData = ({ videoKey, mobileComments }) => {
     const axios = useAxios();
-    const { auth } = useAuthContext();
+    const { auth, authorized } = useAuthContext();
 
     const {
         showComments,
@@ -132,7 +132,9 @@ const VideoData = ({ videoKey, mobileComments }) => {
                         )}
                     </div>
 
-                    {auth && <CommentInput handleOnComment={handleOnComment} />}
+                    {authorized && (
+                        <CommentInput handleOnComment={handleOnComment} />
+                    )}
                 </div>
             </div>
         </div>

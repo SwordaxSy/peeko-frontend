@@ -43,27 +43,22 @@ const useDataStore = create((set, get) => ({
 
         axios
             .put(`/feedback/toggleLike`, { videoKey })
-            .then(({ data }) => {
-                if (!data.success) {
-                    // if failed to perform feedback operation, undo like state change
-                    set((state) => ({
-                        liked: !state.liked,
-                        likesCount: state.likesCount + (state.liked ? -1 : 1),
-                    }));
-
-                    // alert user of failure
-                    useMiscStore
-                        .getState()
-                        .activateAlert(
-                            `Failed to ${
-                                get().liked ? "unlike" : "like"
-                            } video`,
-                            "error"
-                        );
-                }
-            })
             .catch((err) => {
                 console.error(err);
+
+                // if failed to perform feedback operation, undo like state change
+                set((state) => ({
+                    liked: !state.liked,
+                    likesCount: state.likesCount + (state.liked ? -1 : 1),
+                }));
+
+                // alert user of failure
+                useMiscStore
+                    .getState()
+                    .activateAlert(
+                        `Failed to ${get().liked ? "unlike" : "like"} video`,
+                        "error"
+                    );
             })
             .finally(() => {
                 get().setFeedbackDisabled(false);

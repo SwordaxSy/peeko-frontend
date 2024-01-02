@@ -5,7 +5,7 @@ import useMiscStore from "../store/miscStore";
 import useViewStore from "../store/viewStore";
 
 const UserControls = ({ video }) => {
-    const { auth } = useAuthContext();
+    const { auth, authorized } = useAuthContext();
     const { signout } = useAuthenticate();
     const navigate = useNavigate();
 
@@ -49,7 +49,9 @@ const UserControls = ({ video }) => {
             {/* show post modal button */}
             <button
                 type="button"
-                onClick={() => (auth ? openModal(video) : navigate("/auth"))}
+                onClick={() =>
+                    authorized ? openModal(video) : navigate("/auth")
+                }
                 className="absolute w-[2.5rem] h-[2.5rem] top-3 left-14 rounded-full flex justify-center items-center bg-gradient-to-br from-primary-1 to-primary-2 scale-90 hover:scale-75 transition cursor-pointer"
                 title="Post Video"
             >

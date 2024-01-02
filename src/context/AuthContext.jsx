@@ -4,6 +4,7 @@ export const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState(null);
+    const [authorized, setAuthorized] = useState(false);
     const [authLoading, setAuthLoading] = useState(true);
 
     useEffect(() => {
@@ -13,11 +14,17 @@ export const AuthProvider = ({ children }) => {
             setAuth(userAuth);
         }
 
+        if (userAuth?.userDocument.activation.activated) {
+            setAuthorized(true);
+        }
+
         setAuthLoading(false);
     }, []);
 
     return (
-        <AuthContext.Provider value={{ auth, setAuth, authLoading }}>
+        <AuthContext.Provider
+            value={{ auth, setAuth, authLoading, authorized }}
+        >
             {children}
         </AuthContext.Provider>
     );
