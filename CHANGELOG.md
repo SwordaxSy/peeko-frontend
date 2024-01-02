@@ -179,6 +179,21 @@ All changes applied on this project code base will be documented in this file.
     - Fixed unactivated users being able to send comment & feedback requests to backend server
     - Fixed undo feedback not working on feedback failure
 
+## [0.3.3-beta] - 2023-1-2
+
+### Added
+
+    - Added error alert to indicate failure to post comment
+
+### Changed
+
+    - Switched from context api auth to zustand store auth
+    - Improved UI
+    - Repositioned phrase in activation section
+    - Fixed bug causing videos not loading on specific browsers
+    - If video fails to load, app will not auto swipe
+    - Removed video stamps and actions from video data component on mobile view
+
 ## PLANNED TODOS
 
     - Add video description

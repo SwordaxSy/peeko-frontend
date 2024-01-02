@@ -1,9 +1,9 @@
-import useAuthContext from "../hooks/useAuthContext";
 import useAxios from "../hooks/useAxios";
 import useMiscStore from "../store/miscStore";
 import useDataStore from "../store/dataStore";
 import useViewStore from "../store/viewStore";
 import VideoActions from "./VideoActions";
+import useAuthStore from "../store/authStore";
 
 const VideoControls = ({
     videoKey,
@@ -13,7 +13,7 @@ const VideoControls = ({
     prevSwipeDisabled,
 }) => {
     const axios = useAxios();
-    const { auth } = useAuthContext();
+    const { auth } = useAuthStore();
     const { muted, toggleMuted, deleteVideoEnabled, setDeleteVideoEnabled } =
         useViewStore();
     const { uploaderId } = useDataStore();
@@ -66,7 +66,7 @@ const VideoControls = ({
                 <button
                     disabled={!deleteVideoEnabled}
                     type="button"
-                    className="drop-shadow-3xl disabled:opacity-50 disabled:pointer-events-none material-symbols-outlined absolute top-5 right-5 selec-none transition cursor-pointer bg-[rgba(220,20,60,0.5)] hover:bg-[rgba(220,20,60,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-semibold"
+                    className="drop-shadow-3xl disabled:opacity-50 disabled:pointer-events-none material-symbols-outlined absolute top-5 right-5 selec-none transition cursor-pointer bg-[rgba(220,20,60,0.5)] xhover:hover:bg-[rgba(220,20,60,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-semibold"
                     title="Delete Video"
                     onClick={handleDeleteVideo}
                 >
@@ -84,7 +84,7 @@ const VideoControls = ({
                             type="button"
                             disabled={swipeDisabled || prevSwipeDisabled}
                             onClick={() => swipe("prev")}
-                            className="material-symbols-outlined drop-shadow-3xl disabled:opacity-50 disabled:pointer-events-none select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
+                            className="material-symbols-outlined drop-shadow-3xl disabled:opacity-50 disabled:pointer-events-none select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] xhover:hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
                         >
                             expand_less
                         </button>
@@ -92,7 +92,7 @@ const VideoControls = ({
                             type="button"
                             disabled={swipeDisabled}
                             onClick={() => swipe("next")}
-                            className="material-symbols-outlined drop-shadow-3xl disabled:opacity-50 disabled:pointer-events-none select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
+                            className="material-symbols-outlined drop-shadow-3xl disabled:opacity-50 disabled:pointer-events-none select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] xhover:hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
                         >
                             expand_more
                         </button>
@@ -104,7 +104,7 @@ const VideoControls = ({
             <button
                 type="button"
                 onClick={toggleMuted}
-                className="material-symbols-outlined drop-shadow-3xl absolute bottom-5 right-5 select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
+                className="material-symbols-outlined drop-shadow-3xl absolute bottom-5 right-5 select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] xhover:hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
             >
                 {muted ? "volume_off" : "volume_up"}
             </button>

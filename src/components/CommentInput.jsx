@@ -37,7 +37,7 @@ const CommentInput = ({ handleOnComment }) => {
             <button
                 type="button"
                 disabled={!commentEnabled}
-                className="disabled:opacity-70 disabled:pointer-events-none material-symbols-outlined relative z-10 text-3xl hover:opacity-70 transition-opacity cursor-pointer"
+                className="disabled:opacity-70 disabled:pointer-events-none material-symbols-outlined relative z-10 text-3xl xhover:hover:opacity-70 transition-opacity cursor-pointer"
                 onClick={(e) => handleOnComment(comment)}
             >
                 send

@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import useAuthContext from "../hooks/useAuthContext";
 import useAuthenticate from "../hooks/useAuthenticate";
 import useAxios from "../hooks/useAxios";
+import useAuthStore from "../store/authStore";
 
 const ActivationSection = () => {
-    const { auth, setAuth } = useAuthContext();
+    const { auth, setAuth } = useAuthStore();
+
     const { signout } = useAuthenticate();
     const axios = useAxios();
 
@@ -26,12 +27,17 @@ const ActivationSection = () => {
             axios
                 .put(`/user/activateAccount`, { activationCode })
                 .then(({ data }) => {
-                    const newAuthState = JSON.parse(JSON.stringify(auth));
-                    newAuthState.userDocument.activation.activated = true;
-                    localStorage.setItem("auth", JSON.stringify(newAuthState));
-                    setAuth(newAuthState);
+                    if (data.success) {
+                        const newAuthState = JSON.parse(JSON.stringify(auth));
+                        newAuthState.userDocument.activation.activated = true;
+                        localStorage.setItem(
+                            "auth",
+                            JSON.stringify(newAuthState)
+                        );
+                        setAuth(newAuthState);
 
-                    window.location.href = "/";
+                        window.location.href = "/";
+                    }
                 })
                 .catch((err) => {
                     if (err.response) {
@@ -103,14 +109,14 @@ const ActivationSection = () => {
             <p>
                 Welcome to Peeko,{" "}
                 <span className="text-primary-1 font-semibold">
-                    {auth.userDocument.username}
+                    {auth?.userDocument.username}
                 </span>
                 <br />
                 <br />
                 To continue, you need to activate your account. An activation
                 code has been sent to your email address{" "}
                 <span className="text-primary-1 font-semibold">
-                    {auth.userDocument.email}
+                    {auth?.userDocument.email}
                 </span>
                 <br />
                 <br />
@@ -134,13 +140,13 @@ const ActivationSection = () => {
                 ))}
             </div>
 
-            <p className="text-error bg-[rgba(220,20,60,0.1)] m-auto p-3.5 w-fit rounded-lg mt-5 font-medium empty:p-0">
+            <p className="text-error bg-[rgba(220,20,60,0.1)] m-auto p-3.5 w-fit rounded-lg my-5 font-medium empty:p-0">
                 {error}
             </p>
 
             <p
                 role="button"
-                className="absolute bottom-4 left-6 underline text-primary-1 font-semibold"
+                className="text-center underline text-primary-1 font-semibold"
                 onClick={handleReturnToRegistration}
             >
                 Return to registration

@@ -1,17 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import useAuthContext from "./hooks/useAuthContext";
 
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import Video from "./pages/Video";
-import Loading from "./components/Loading";
+import useAuthStore from "./store/authStore";
 
 const App = () => {
-    const { authLoading, authorized } = useAuthContext();
-
-    if (authLoading) {
-        return <Loading />;
-    }
+    const { authorized } = useAuthStore();
 
     return (
         <div>

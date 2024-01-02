@@ -10,7 +10,6 @@ export const useSwipe = () => {
 
     const [swipeDisabled, setSwipeDisabled] = useState(false);
     const [prevSwipeDisabled, setPrevSwipeDisabled] = useState(true);
-    const [lastSwipe, setLastSwipe] = useState("next");
 
     const swipeNavigate = (currentKey, targetKey) => {
         if (currentKey !== targetKey) {
@@ -59,7 +58,6 @@ export const useSwipe = () => {
     const swipe = async (dir) => {
         if (swipeDisabled) return;
         setSwipeDisabled(true);
-        setLastSwipe(dir);
 
         setTimeout(() => {
             setSwipeDisabled(false);
@@ -116,7 +114,6 @@ export const useSwipe = () => {
         setSwipeDisabled,
         prevSwipeDisabled,
         setPrevSwipeDisabled,
-        lastSwipe,
         insertVideo,
     };
 };

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import useAuthenticate from "../hooks/useAuthenticate";
-import useAuthContext from "../hooks/useAuthContext";
 
 import InputField from "../components/InputField";
 import ActivationSection from "../components/ActivationSection";
@@ -10,8 +9,12 @@ import Blob1 from "../assets/blob-1.svg";
 import Blob2 from "../assets/blob-2.svg";
 import Blob3 from "../assets/blob-3.svg";
 import LogoDesign from "../assets/logo-design.png";
+import useAuthStore from "../store/authStore";
 
 const AuthPage = () => {
+    const { authenticate, error, setError, isLoading } = useAuthenticate();
+    const { auth, authorized } = useAuthStore();
+
     const usernameRegex = /^[a-zA-Z0-9_ ]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -29,9 +32,6 @@ const AuthPage = () => {
         "password",
         "repassword",
     ]);
-
-    const { authenticate, error, setError, isLoading } = useAuthenticate();
-    const { auth, authorized } = useAuthContext();
 
     const handleUsernameStroke = (e) => {
         const newUsername = e.target.value;
@@ -236,7 +236,7 @@ const AuthPage = () => {
                                             errors.length > 0) ||
                                         isLoading
                                     }
-                                    className="h-[52px] flex justify-center items-center disabled:pointer-events-none disabled:opacity-60 w-full border-none outline-none bg-gradient-to-r from-primary-1 to-primary-2 text-white font-semibold text-2xl py-2.5 bg-[length:200%] hover:bg-right transition-all"
+                                    className="h-[52px] flex justify-center items-center disabled:pointer-events-none disabled:opacity-60 w-full border-none outline-none bg-gradient-to-r from-primary-1 to-primary-2 text-white font-semibold text-2xl py-2.5 bg-[length:200%] xhover:hover:bg-right transition-all"
                                 >
                                     {isLoading ? (
                                         <span className="material-symbols-outlined animate-spin">

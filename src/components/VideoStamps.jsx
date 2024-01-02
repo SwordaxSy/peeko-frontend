@@ -7,7 +7,7 @@ const VideoStamps = ({ viewMode }) => {
     return (
         <div
             className={`flex justify-center items-center gap-2 ${
-                viewMode === "VideoView" ? "absolute bottom-3 left-3" : ""
+                viewMode === "view-mode" ? "absolute bottom-3 left-3" : ""
             }`}
         >
             <span className="material-symbols-outlined drop-shadow-3xl text-5xl select-none">

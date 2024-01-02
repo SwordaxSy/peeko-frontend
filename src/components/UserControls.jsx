@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import useAuthContext from "../hooks/useAuthContext";
 import useAuthenticate from "../hooks/useAuthenticate";
 import useMiscStore from "../store/miscStore";
 import useViewStore from "../store/viewStore";
+import useAuthStore from "../store/authStore";
 
 const UserControls = ({ video }) => {
-    const { auth, authorized } = useAuthContext();
+    const { auth, authorized } = useAuthStore();
     const { signout } = useAuthenticate();
     const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const UserControls = ({ video }) => {
                         <hr className="bg-white h-[2px] my-3 w-full" />
                         <button
                             onClick={signout}
-                            className="text-error w-full rounded-lg flex justify-center items-center py-1 hover:bg-[rgba(255,255,255,0.1)] transition"
+                            className="text-error w-full rounded-lg flex justify-center items-center py-1 xhover:hover:bg-[rgba(255,255,255,0.1)] transition"
                             type="button"
                             title="Sign Out"
                         >
@@ -52,7 +52,7 @@ const UserControls = ({ video }) => {
                 onClick={() =>
                     authorized ? openModal(video) : navigate("/auth")
                 }
-                className="absolute w-[2.5rem] h-[2.5rem] top-3 left-14 rounded-full flex justify-center items-center bg-gradient-to-br from-primary-1 to-primary-2 scale-90 hover:scale-75 transition cursor-pointer"
+                className="absolute w-[2.5rem] h-[2.5rem] top-3 left-14 rounded-full flex justify-center items-center bg-gradient-to-br from-primary-1 to-primary-2 scale-90 xhover:hover:scale-75 transition cursor-pointer"
                 title="Post Video"
             >
                 <span className="material-symbols-outlined drop-shadow-3xl text-3xl font-bold">

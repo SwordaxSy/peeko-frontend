@@ -1,13 +1,13 @@
 import axios from "axios";
-import useAuthContext from "./useAuthContext";
 import { useEffect } from "react";
+import useAuthStore from "../store/authStore";
 
 const instance = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
 });
 
 const useAxios = () => {
-    const { auth } = useAuthContext();
+    const { auth } = useAuthStore();
 
     useEffect(() => {
         const intercept = instance.interceptors.request.use(

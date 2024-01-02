@@ -1,16 +1,19 @@
 import { useEffect } from "react";
-import useAuthContext from "../hooks/useAuthContext";
 import useAxios from "../hooks/useAxios";
 
 import Comment from "./Comment";
 import CommentInput from "./CommentInput";
 import useDataStore from "../store/dataStore";
-import VideoDataHeader from "./VideoDataHeader";
+import VideoStamps from "./VideoStamps";
+import VideoActions from "./VideoActions";
+import useAuthStore from "../store/authStore";
+import useMiscStore from "../store/miscStore";
+import { useSwipeable } from "react-swipeable";
 
 const VideoData = ({ videoKey, mobileComments }) => {
     const axios = useAxios();
-    const { auth, authorized } = useAuthContext();
-
+    const { auth, authorized } = useAuthStore();
+    const { activateAlert } = useMiscStore();
     const {
         showComments,
         setUploaderId,
@@ -26,6 +29,7 @@ const VideoData = ({ videoKey, mobileComments }) => {
         setCommentEnabled,
         setComment,
         activeMobileComments,
+        setActiveMobileComments,
     } = useDataStore();
 
     // onComment state change
@@ -45,8 +49,19 @@ const VideoData = ({ videoKey, mobileComments }) => {
             })
             .catch((err) => {
                 console.error(err);
+                activateAlert("Failed to post comment", "error");
             });
     };
+
+    // swipe handler
+    const swipeHandler = useSwipeable({
+        onSwipedRight: () => {
+            if (!mobileComments) return;
+            setActiveMobileComments(false);
+        },
+        trackMouse: true,
+        trackTouch: true,
+    });
 
     // fetch video data
     useEffect(() => {
@@ -106,13 +121,28 @@ const VideoData = ({ videoKey, mobileComments }) => {
             <div className="w-full h-full bg-gradient-to-br from-primary-1 to-primary-2 absolute brightness-50 -z-10"></div>
 
             <div className="w-full h-full p-3 flex flex-col justify-start relative z-10">
-                <VideoDataHeader
-                    videoKey={videoKey}
-                    mobileComments={mobileComments}
-                />
+                {!mobileComments && (
+                    <div className="flex justify-between items-center h-[100px] overflow-x-auto comments-top">
+                        <VideoStamps viewMode="data-mode" />
 
-                <div className="bg-[rgba(13,13,13,0.4)] h-[calc(100%-124px)] rounded-xl p-2 relative">
-                    <div className="overflow-auto h-full pr-1 pb-8">
+                        <VideoActions
+                            videoKey={videoKey}
+                            viewMode="horizontal"
+                        />
+                    </div>
+                )}
+
+                <div
+                    className={`bg-[rgba(13,13,13,0.4)] ${
+                        mobileComments
+                            ? "h-[calc(100%-24px)]"
+                            : "h-[calc(100%-124px)]"
+                    } rounded-xl p-2 relative`}
+                >
+                    <div
+                        className="overflow-auto h-full pr-1 pb-8"
+                        {...swipeHandler}
+                    >
                         {comments.length > 0 && showComments ? (
                             comments.map((commentDocument) => (
                                 <Comment

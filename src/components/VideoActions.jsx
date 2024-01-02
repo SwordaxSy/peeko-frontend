@@ -1,12 +1,12 @@
 import numeral from "numeral";
 import useAxios from "../hooks/useAxios";
 import useDataStore from "../store/dataStore";
-import useAuthContext from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from "../store/authStore";
 
 const VideoActions = ({ videoKey, viewMode }) => {
     const axios = useAxios();
-    const { authorized } = useAuthContext();
+    const { authorized } = useAuthStore();
     const navigate = useNavigate();
     const {
         feedback,
@@ -17,32 +17,43 @@ const VideoActions = ({ videoKey, viewMode }) => {
         setActiveMobileComments,
     } = useDataStore();
 
+    const styles = {
+        vertical: {
+            container: `flex flex-col gap-1`,
+            icon: `text-3xl`,
+            text: `text-xl`,
+        },
+        horizontal: {
+            container: `flex items-start gap-1`,
+            icon: `text-2xl`,
+            text: `text-lg`,
+        },
+    };
+
     return (
-        <div
-            className={`${viewMode === "horizontal" ? "flex items-start" : ""}`}
-        >
+        <div className={styles[viewMode].container}>
             <div
                 onClick={() =>
                     authorized ? feedback(videoKey, axios) : navigate("/auth")
                 }
-                className="p-3 rounded-lg flex flex-col justify-center items-center hover:bg-[rgba(255,255,255,0.1)] transition cursor-pointer"
+                className="p-2 rounded-lg flex flex-col justify-center items-center xhover:hover:opacity-50 transition cursor-pointer"
             >
                 <span
-                    className={`material-icons-outlined transition drop-shadow-3xl text-3xl ${
-                        liked ? "text-error" : ""
-                    }`}
+                    className={`material-icons-outlined transition drop-shadow-3xl ${
+                        styles[viewMode].icon
+                    } ${liked ? "text-error" : ""}`}
                 >
                     {liked ? "favorite" : "favorite_border"}
                 </span>
-                <p className="drop-shadow-3xl text-xl">
+                <p className={`drop-shadow-3xl ${styles[viewMode].text}`}>
                     {numeral(likesCount).format("0a")}
                 </p>
             </div>
 
             <div
-                className={`p-3 rounded-lg flex flex-col justify-center items-center ${
+                className={`p-2 rounded-lg flex flex-col justify-center items-center ${
                     viewMode === "vertical"
-                        ? "hover:bg-[rgba(255,255,255,0.1)] transition cursor-pointer"
+                        ? "xhover:hover:opacity-50 transition cursor-pointer"
                         : ""
                 }`}
                 onClick={
@@ -51,19 +62,23 @@ const VideoActions = ({ videoKey, viewMode }) => {
                         : null
                 }
             >
-                <span className="material-symbols-outlined drop-shadow-3xl text-3xl">
+                <span
+                    className={`material-symbols-outlined drop-shadow-3xl ${styles[viewMode].icon}`}
+                >
                     chat
                 </span>
-                <p className="drop-shadow-3xl text-xl">
+                <p className={`drop-shadow-3xl ${styles[viewMode].text}`}>
                     {numeral(commentsCount).format("0a")}
                 </p>
             </div>
 
             <div
                 onClick={() => share(videoKey)}
-                className="p-3 rounded-lg hover:bg-[rgba(255,255,255,0.1)] transition cursor-pointer"
+                className="p-2 rounded-lg xhover:hover:opacity-50 transition cursor-pointer"
             >
-                <span className="material-symbols-outlined drop-shadow-3xl text-3xl">
+                <span
+                    className={`material-symbols-outlined drop-shadow-3xl ${styles[viewMode].icon}`}
+                >
                     share
                 </span>
             </div>

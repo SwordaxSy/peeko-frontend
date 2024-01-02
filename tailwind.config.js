@@ -18,6 +18,11 @@ module.exports = {
             dropShadow: {
                 "3xl": "0 0 0.2rem rgba(0, 0, 0, 0.6)",
             },
+            screens: {
+                xhover: {
+                    raw: "(hover: hover)",
+                },
+            },
         },
         screens: {
             xl: { max: "1279px" },

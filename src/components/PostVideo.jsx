@@ -124,7 +124,7 @@ const PostVideo = ({ video, previewVideo }) => {
                         {/* remove video button */}
                         {!isPosting && (
                             <span
-                                className="material-symbols-outlined absolute text-error top-0 right-0 cursor-pointer transition hover:opacity-70"
+                                className="material-symbols-outlined absolute text-error top-0 right-0 cursor-pointer transition xhover:hover:opacity-70"
                                 title="Remove Video"
                                 onClick={handleRemoveVideo}
                                 id="removeVideoButton"
@@ -174,7 +174,7 @@ const PostVideo = ({ video, previewVideo }) => {
                 <button
                     type="button"
                     disabled={!allowSubmit || isPosting}
-                    className="bg-primary-2 w-4/6 p-4 text-xl font-bold rounded-lg transition hover:scale-105 disabled:opacity-50 disabled:pointer-events-none flex justify-center items-center"
+                    className="bg-primary-2 w-4/6 p-4 text-xl font-bold rounded-lg transition xhover:hover:scale-105 disabled:opacity-50 disabled:pointer-events-none flex justify-center items-center"
                     onClick={handlePostVideo}
                 >
                     {isPosting ? (

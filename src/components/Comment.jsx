@@ -1,13 +1,13 @@
 import { formatDistanceToNow } from "date-fns";
 import { useEffect } from "react";
 import useAxios from "../hooks/useAxios";
-import useAuthContext from "../hooks/useAuthContext";
 import useDataStore from "../store/dataStore";
 import useMiscStore from "../store/miscStore";
+import useAuthStore from "../store/authStore";
 
 const Comment = ({ commentDocument }) => {
     const axios = useAxios();
-    const { auth } = useAuthContext();
+    const { auth } = useAuthStore();
 
     const {
         comments,

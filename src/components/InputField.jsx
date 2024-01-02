@@ -26,7 +26,7 @@ const InputField = ({
                 <div className="flex relative">
                     {inputElement}
                     <span
-                        className="material-symbols-outlined text-3xl absolute right-0 top-1/2 -translate-y-1/2 cursor-pointer hover:opacity-70 transition select-none"
+                        className="material-symbols-outlined text-3xl absolute right-0 top-1/2 -translate-y-1/2 cursor-pointer xhover:hover:opacity-70 transition select-none"
                         onClick={handlePasswordMode}
                     >
                         {visibilityState}

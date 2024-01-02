@@ -54,14 +54,14 @@ const Video = () => {
                 <div className="w-full flex justify-end gap-3 font-bold">
                     <button
                         type="button"
-                        className="hover:opacity-75 transition"
+                        className="xhover:hover:opacity-75 transition"
                         onClick={deny}
                     >
                         Cancel
                     </button>
                     <button
                         type="button"
-                        className="hover:opacity-75 transition"
+                        className="xhover:hover:opacity-75 transition"
                         onClick={confirm}
                     >
                         Confirm

@@ -15,13 +15,8 @@ import VideoStamps from "./VideoStamps";
 
 const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
     // hooks
-    const {
-        swipe,
-        swipeDisabled,
-        setSwipeDisabled,
-        prevSwipeDisabled,
-        lastSwipe,
-    } = useSwipe();
+    const { swipe, swipeDisabled, setSwipeDisabled, prevSwipeDisabled } =
+        useSwipe();
 
     const {
         duration,
@@ -81,7 +76,6 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
     const handleVideoError = (e) => {
         console.error(e);
         activateAlert("Failed to load video", "error");
-        swipe(lastSwipe);
     };
 
     const handleOnKeyDown = useCallback(
@@ -170,7 +164,6 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
             {/* <video
                 className="w-full blur-xl absolute top-1/2 -translate-y-1/2 brightness-[40%]"
                 src={`${process.env.REACT_APP_API_URL}/video/streamVideo/${videoKey}`}
-                crossOrigin="anonymous"
                 playsInline
             >
                 Your browser does not support this video
@@ -194,7 +187,6 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
                     onLoadedData={handleLoadedData}
                     autoPlay={isPlaying}
                     muted={muted}
-                    crossOrigin="anonymous"
                     loop
                     playsInline
                 >
@@ -245,7 +237,7 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
 
             <UserControls video={video} />
 
-            {mobileComments && <VideoStamps viewMode="VideoView" />}
+            {mobileComments && <VideoStamps viewMode="view-mode" />}
         </div>
     );
 };
