@@ -59,6 +59,7 @@ const VideoData = ({ videoKey, mobileComments }) => {
             if (!mobileComments) return;
             setActiveMobileComments(false);
         },
+        preventScrollOnSwipe: true,
         trackMouse: true,
         trackTouch: true,
     });
