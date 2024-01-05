@@ -1,13 +1,16 @@
 import { useParams } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import PostVideo from "../components/PostVideo";
 import VideoView from "../components/VideoView";
 import VideoData from "../components/VideoData";
 import useMiscStore from "../store/miscStore";
+import useDataStore from "../store/dataStore";
+import NotFound from "./NotFound";
+import useViewStore from "../store/viewStore";
 
 const Video = () => {
-    const { videoKey } = useParams();
+    const { username, videoKey } = useParams();
 
     const {
         confirmationActive,
@@ -19,13 +22,24 @@ const Video = () => {
         confirm,
     } = useMiscStore();
 
+    const { dataIsLoading, uploaderId } = useDataStore();
+    const { setSwipeMode } = useViewStore();
+
     const [mobileComments, setMobileComments] = useState(true);
 
     const video = useRef(null);
     const previewVideo = useRef(null);
 
+    useEffect(() => {
+        setSwipeMode(username ? "profile" : "explore");
+    }, [setSwipeMode, username]);
+
+    if (!dataIsLoading && !uploaderId && videoKey !== "undefined") {
+        return <NotFound />;
+    }
+
     return (
-        <div className="bg-slate-800 h-[100svh] flex justify-center items-center text-white relative overflow-hidden">
+        <div className="bg-primary-3 h-[100svh] flex justify-center items-center text-white relative overflow-hidden">
             {/* alert box */}
             <div
                 className={`${

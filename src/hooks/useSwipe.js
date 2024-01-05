@@ -1,22 +1,40 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import useAxios from "./useAxios";
 import useViewStore from "../store/viewStore";
 
 export const useSwipe = () => {
     const navigate = useNavigate();
     const axios = useAxios();
-    const { setVideoIsLoading } = useViewStore();
+    const { username } = useParams();
+    const { setVideoIsLoading, swipeMode } = useViewStore();
 
     const [swipeDisabled, setSwipeDisabled] = useState(false);
     const [prevSwipeDisabled, setPrevSwipeDisabled] = useState(true);
+    const [nextSwipeDisabled, setNextSwipeDisabled] = useState(false);
+
+    useEffect(() => {
+        const keys =
+            JSON.parse(sessionStorage.getItem(swipeMode + "VideoKeys")) || [];
+        const current =
+            parseInt(sessionStorage.getItem(swipeMode + "Current")) || 0;
+
+        /**
+         * if at key index 0, then no prev key, so disable prevSwipe
+         * if at profile video and no next key, then no next video in profile, so disable nextSwipe
+         */
+        setPrevSwipeDisabled(current === 0);
+        setNextSwipeDisabled(swipeMode === "profile" && !keys[current + 1]);
+    }, [swipeMode]);
 
     const swipeNavigate = (currentKey, targetKey) => {
         if (currentKey !== targetKey) {
             setVideoIsLoading(true);
         }
 
-        navigate(`/video/${targetKey}`);
+        const prefix =
+            swipeMode === "explore" ? "/video/" : `/profile/${username}/`;
+        navigate(prefix + targetKey);
     };
 
     const fillQueue = async (val = 10) => {
@@ -25,27 +43,25 @@ export const useSwipe = () => {
                 .get(`/video/getVideos/${val}`)
                 .then(({ data }) => {
                     if (data.success) {
+                        // get current keys or [] if none
                         const currentKeys =
-                            JSON.parse(sessionStorage.getItem("videoKeys")) ||
-                            [];
+                            JSON.parse(
+                                sessionStorage.getItem("exploreVideoKeys")
+                            ) || [];
 
+                        // merge current keys with fetched keys
                         const newKeys = currentKeys.concat(
                             data.videoDocuments.map((doc) => doc.videoKey)
                         );
 
+                        // set new keys
                         sessionStorage.setItem(
-                            "videoKeys",
+                            "exploreVideoKeys",
                             JSON.stringify(newKeys)
                         );
 
-                        let returnValue = null;
-                        if (currentKeys.length === 0) {
-                            returnValue = newKeys[0];
-                            sessionStorage.setItem("current", 0);
-                            setPrevSwipeDisabled(true);
-                        }
-
-                        resolve(returnValue);
+                        // return first key
+                        resolve(newKeys[0]);
                     } else reject("Filling Queue Failed");
                 })
                 .catch((err) => {
@@ -63,35 +79,60 @@ export const useSwipe = () => {
             setSwipeDisabled(false);
         }, 500);
 
-        const keys = JSON.parse(sessionStorage.getItem("videoKeys")) || [];
-        const current = parseInt(sessionStorage.getItem("current")) || 0;
+        const keysStorageName = swipeMode + "VideoKeys";
+        const currentStorageName = swipeMode + "Current";
 
+        const keys = JSON.parse(sessionStorage.getItem(keysStorageName)) || [];
+        const current =
+            parseInt(sessionStorage.getItem(currentStorageName)) || 0;
+
+        /**
+         * if current key index is <= 1 and we are going to prev video,
+         * then disable prevSwipe because there wont be a video previous to the previous video
+         *
+         * if at profile video and no video after the next video and we are going to next video
+         * then disable nextSwipe because there wont be a video after the next video
+         */
         setPrevSwipeDisabled(current <= 1 && dir === "prev");
+        setNextSwipeDisabled(
+            swipeMode === "profile" && !keys[current + 2] && dir === "next"
+        );
 
         switch (dir) {
             case "prev": {
-                if (!prevSwipeDisabled) {
-                    const prevIndex = current - 1;
-                    sessionStorage.setItem("current", prevIndex);
+                if (prevSwipeDisabled) return;
 
-                    swipeNavigate(keys[current], keys[prevIndex]);
-                }
+                const prevIndex = current - 1;
+                sessionStorage.setItem(currentStorageName, prevIndex);
+                swipeNavigate(keys[current], keys[prevIndex]);
+
                 break;
             }
             case "next": {
-                if (current + 1 < keys.length) {
+                if (nextSwipeDisabled) return;
+
+                /**
+                 * if next video exists
+                 *      then navigate to it
+                 *          if the distance to the end of the keys list is <= 4
+                 *          and we are in the explore mode
+                 *              then fillQueue
+                 * if not, and if we are in the explore mode
+                 *      then fillQueue
+                 *      and navigate to the index 1 key generated by fillQueue
+                 */
+                if (keys[current + 1]) {
                     const nextIndex = current + 1;
-                    sessionStorage.setItem("current", nextIndex);
+                    sessionStorage.setItem(currentStorageName, nextIndex);
 
                     swipeNavigate(keys[current], keys[nextIndex]);
 
-                    if (keys.length - nextIndex <= 4) await fillQueue();
-                } else {
+                    if (keys.length - nextIndex <= 4 && swipeMode === "explore")
+                        await fillQueue();
+                } else if (swipeMode === "explore") {
                     const key = await fillQueue();
 
-                    if (key || key === undefined) {
-                        swipeNavigate(keys[current], key);
-                    }
+                    swipeNavigate(keys[current], key);
                 }
                 break;
             }
@@ -101,10 +142,11 @@ export const useSwipe = () => {
     };
 
     const insertVideo = (videoKey) => {
-        const keys = JSON.parse(sessionStorage.getItem("videoKeys")) || [];
-        const current = parseInt(sessionStorage.getItem("current")) || 0;
+        const keys =
+            JSON.parse(sessionStorage.getItem("exploreVideoKeys")) || [];
+        const current = parseInt(sessionStorage.getItem("exploreCurrent")) || 0;
         keys.splice(current, 0, videoKey);
-        sessionStorage.setItem("videoKeys", JSON.stringify(keys));
+        sessionStorage.setItem("exploreVideoKeys", JSON.stringify(keys));
     };
 
     return {
@@ -114,6 +156,8 @@ export const useSwipe = () => {
         setSwipeDisabled,
         prevSwipeDisabled,
         setPrevSwipeDisabled,
+        nextSwipeDisabled,
+        setNextSwipeDisabled,
         insertVideo,
     };
 };

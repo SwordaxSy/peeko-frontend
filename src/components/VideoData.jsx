@@ -15,6 +15,7 @@ const VideoData = ({ videoKey, mobileComments }) => {
     const { auth, authorized } = useAuthStore();
     const { activateAlert } = useMiscStore();
     const {
+        setDataIsLoading,
         showComments,
         setUploaderId,
         setUploaderUsername,
@@ -77,18 +78,14 @@ const VideoData = ({ videoKey, mobileComments }) => {
                 const { data: commentsData } = responses[1];
 
                 if (videoData.success) {
-                    setUploaderId(videoData.videoDocument.uploaderId);
+                    setUploaderId(videoData.videoDocument.uploader._id);
                     setUploaderUsername(
-                        videoData.videoDocument.uploaderUsername
+                        videoData.videoDocument.uploader.username
                     );
                     setTimestamp(videoData.videoDocument.createdAt);
-                    setLikesCount(videoData.videoDocument.likes.length);
+                    setLikesCount(videoData.videoDocument.likesCount);
                     setCommentsCount(videoData.videoDocument.commentsCount);
-                    setLiked(
-                        videoData.videoDocument.likes.includes(
-                            auth?.userDocument._id
-                        )
-                    );
+                    setLiked(videoData.isLiked);
                 }
 
                 if (commentsData.success) {
@@ -97,6 +94,9 @@ const VideoData = ({ videoKey, mobileComments }) => {
             })
             .catch((err) => {
                 console.error(err);
+            })
+            .finally(() => {
+                setDataIsLoading(false);
             });
     }, [
         auth,
@@ -109,6 +109,7 @@ const VideoData = ({ videoKey, mobileComments }) => {
         setCommentsCount,
         setLiked,
         setComments,
+        setDataIsLoading,
     ]);
 
     return (

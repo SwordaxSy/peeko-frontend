@@ -194,8 +194,25 @@ All changes applied on this project code base will be documented in this file.
     - If video fails to load, app will not auto swipe
     - Removed video stamps and actions from video data component on mobile view
 
+## [0.4.0-beta] - 2023-1-5
+
+### Added
+
+    - Added profile page
+    - Added background blurry thumbnail to video page
+    - Added not found page
+    - Added new route /profile/{username}/{videoKey} to show user videos
+
+### Changed
+
+    - Know whether a video is liked by the current user or not from the server instead of the client
+    - Added shadows to profile page video thumbnails
+    - Added barriers between stat cards in profile page
+    - Modified useSwipe to be compatible with the new profile page
+
 ## PLANNED TODOS
 
+    - Add bio
+    - Add profile picture
     - Add video description
-    - Add profile page
     - Add profile settings

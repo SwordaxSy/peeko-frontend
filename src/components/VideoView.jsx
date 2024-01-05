@@ -15,8 +15,13 @@ import VideoStamps from "./VideoStamps";
 
 const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
     // hooks
-    const { swipe, swipeDisabled, setSwipeDisabled, prevSwipeDisabled } =
-        useSwipe();
+    const {
+        swipe,
+        swipeDisabled,
+        setSwipeDisabled,
+        prevSwipeDisabled,
+        nextSwipeDisabled,
+    } = useSwipe();
 
     const {
         duration,
@@ -125,7 +130,7 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
             swipe("prev");
         },
         onSwipedUp: () => {
-            if (swipeDisabled) return;
+            if (swipeDisabled || nextSwipeDisabled) return;
             swipe("next");
         },
         onTap: ({ event }) => {
@@ -157,17 +162,13 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
                 mobileComments ? "w-screen" : "w-[calc(100%-500px)]"
             } h-[100svh] fixed left-0 overflow-hidden`}
         >
-            {/* 
-                The existence of two video elements causes bugs
-                so it will be removed for now
-            */}
-            {/* <video
+            {/* blurry background thumbnail */}
+            <img
+                src={`${process.env.REACT_APP_API_URL}/video/streamThumbnail/${videoKey}`}
+                alt="Thumbnail"
                 className="w-full blur-xl absolute top-1/2 -translate-y-1/2 brightness-[40%]"
-                src={`${process.env.REACT_APP_API_URL}/video/streamVideo/${videoKey}`}
-                playsInline
-            >
-                Your browser does not support this video
-            </video> */}
+            />
+
             <div
                 className="aspect-[9/16] h-full absolute left-1/2 -translate-x-1/2"
                 {...swipeHandler}
@@ -233,6 +234,7 @@ const VideoView = ({ videoKey, video, mobileComments, setMobileComments }) => {
                 swipe={swipe}
                 swipeDisabled={swipeDisabled}
                 prevSwipeDisabled={prevSwipeDisabled}
+                nextSwipeDisabled={nextSwipeDisabled}
             />
 
             <UserControls video={video} />

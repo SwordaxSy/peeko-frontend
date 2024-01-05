@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuthenticate from "../hooks/useAuthenticate";
 import useMiscStore from "../store/miscStore";
 import useViewStore from "../store/viewStore";
@@ -30,7 +30,9 @@ const UserControls = ({ video }) => {
                                 : "opacity-0 pointer-events-none"
                         } user-dropdown transition bg-primary-1 text-base absolute left-1/2 mt-[10px] p-2 rounded-lg rounded-tl-none z-10 cursor-auto flex flex-col justify-center items-center`}
                     >
-                        <p>{auth?.userDocument.username}</p>
+                        <Link to={`/profile/${auth?.userDocument.username}`}>
+                            <p>{auth?.userDocument.username}</p>
+                        </Link>
                         <hr className="bg-white h-[2px] my-3 w-full" />
                         <button
                             onClick={signout}

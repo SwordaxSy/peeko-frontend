@@ -3,6 +3,12 @@ import useMiscStore from "./miscStore";
 import useDataStore from "./dataStore";
 
 const useViewStore = create((set, get) => ({
+    // swipe mode
+    swipeMode: "explore",
+    setSwipeMode: (newSwipeMode) => {
+        set({ swipeMode: newSwipeMode });
+    },
+
     // main
     isPlaying: true,
     setIsPlaying: (newIsPlaying) => {

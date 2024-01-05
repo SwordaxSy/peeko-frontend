@@ -2,6 +2,11 @@ import { create } from "zustand";
 import useMiscStore from "./miscStore";
 
 const useDataStore = create((set, get) => ({
+    dataIsLoading: true,
+    setDataIsLoading: (newDataIsLoading) => {
+        set({ dataIsLoading: newDataIsLoading });
+    },
+
     uploaderId: "",
     setUploaderId: (newUploaderId) => {
         set({ uploaderId: newUploaderId });

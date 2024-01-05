@@ -11,6 +11,7 @@ const VideoControls = ({
     swipe,
     swipeDisabled,
     prevSwipeDisabled,
+    nextSwipeDisabled,
 }) => {
     const axios = useAxios();
     const { auth } = useAuthStore();
@@ -35,12 +36,12 @@ const VideoControls = ({
                 if (data.success) {
                     // clear session storage
                     let videoKeys = JSON.parse(
-                        sessionStorage.getItem("videoKeys")
+                        sessionStorage.getItem("exploreVideoKeys")
                     );
                     if (!videoKey) return;
                     videoKeys = videoKeys.filter((key) => key !== videoKey);
                     sessionStorage.setItem(
-                        "videoKeys",
+                        "exploreVideoKeys",
                         JSON.stringify(videoKeys)
                     );
 
@@ -90,7 +91,7 @@ const VideoControls = ({
                         </button>
                         <button
                             type="button"
-                            disabled={swipeDisabled}
+                            disabled={swipeDisabled || nextSwipeDisabled}
                             onClick={() => swipe("next")}
                             className="material-symbols-outlined drop-shadow-3xl disabled:opacity-50 disabled:pointer-events-none select-none transition cursor-pointer bg-[rgba(84,84,84,0.5)] xhover:hover:bg-[rgba(84,84,84,1)] rounded-full text-3xl w-12 h-12 flex justify-center items-center font-bold"
                         >

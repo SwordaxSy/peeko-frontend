@@ -1,5 +1,6 @@
 import { formatDistanceToNow } from "date-fns";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import useAxios from "../hooks/useAxios";
 import useDataStore from "../store/dataStore";
 import useMiscStore from "../store/miscStore";
@@ -71,13 +72,18 @@ const Comment = ({ commentDocument }) => {
             onDoubleClick={handleContextMenu}
         >
             <div className="top flex justify-center items-center w-fit gap-1">
-                <span className="material-symbols-outlined text-2xl">
-                    account_circle
-                </span>
-                <p className="text-md font-semibold">
-                    {commentDocument.commentorUsername}
-                </p>
-                <p className="text-sm text-[rgba(255,255,255,0.7)] pl-3">
+                <Link
+                    to={`/profile/${commentDocument.commentor.username}`}
+                    className="flex justify-center items-center gap-1"
+                >
+                    <span className="material-symbols-outlined text-2xl">
+                        account_circle
+                    </span>
+                    <p className="text-md font-semibold">
+                        {commentDocument.commentor.username}
+                    </p>
+                </Link>
+                <p className="text-sm text-fadingWhite pl-3">
                     {formatDistanceToNow(new Date(commentDocument.createdAt), {
                         addSuffix: true,
                     })}
@@ -91,7 +97,7 @@ const Comment = ({ commentDocument }) => {
                 onClick={handleDeleteComment}
                 className={`${
                     currentActiveDelete === commentDocument._id &&
-                    auth?.userDocument._id === commentDocument.commentorId
+                    auth?.userDocument._id === commentDocument.commentor._id
                         ? ""
                         : "opacity-0 pointer-events-none"
                 } w-full h-full absolute flex justify-center items-center rounded-lg bg-[rgba(220,20,60,0.8)] select-none cursor-pointer`}

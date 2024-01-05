@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
+import { Link } from "react-router-dom";
 import useDataStore from "../store/dataStore";
 
 const VideoStamps = ({ viewMode }) => {
@@ -10,15 +11,20 @@ const VideoStamps = ({ viewMode }) => {
                 viewMode === "view-mode" ? "absolute bottom-3 left-3" : ""
             }`}
         >
-            <span className="material-symbols-outlined drop-shadow-3xl text-5xl select-none">
-                account_circle
-            </span>
+            <Link to={`/profile/${uploaderUsername}`}>
+                <span className="material-symbols-outlined drop-shadow-3xl text-5xl select-none">
+                    account_circle
+                </span>
+            </Link>
 
             <div>
-                <p className="font-bold text-lg drop-shadow-3xl">
-                    {uploaderUsername}
-                </p>
-                <p className="text-sm text-[rgba(255,255,255,0.7)] drop-shadow-3xl">
+                <Link to={`/profile/${uploaderUsername}`}>
+                    <p className="font-bold text-lg drop-shadow-3xl">
+                        {uploaderUsername}
+                    </p>
+                </Link>
+
+                <p className="text-sm text-fadingWhite drop-shadow-3xl">
                     {formatDistanceToNow(new Date(timestamp), {
                         addSuffix: true,
                     })}
