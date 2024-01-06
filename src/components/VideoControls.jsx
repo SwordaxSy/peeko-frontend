@@ -31,7 +31,7 @@ const VideoControls = ({
         if (!approval) return setDeleteVideoEnabled(true);
 
         axios
-            .delete(`/video/deleteVideo/${videoKey}`)
+            .delete(`/video/delete/${videoKey}`)
             .then(({ data }) => {
                 if (data.success) {
                     // clear session storage

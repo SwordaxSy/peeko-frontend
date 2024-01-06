@@ -25,7 +25,7 @@ const ActivationSection = () => {
             setError("");
 
             axios
-                .put(`/user/activateAccount`, { activationCode })
+                .put(`/user/activate`, { activationCode })
                 .then(({ data }) => {
                     if (data.success) {
                         const newAuthState = JSON.parse(JSON.stringify(auth));

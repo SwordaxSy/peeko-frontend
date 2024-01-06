@@ -210,6 +210,12 @@ All changes applied on this project code base will be documented in this file.
     - Added barriers between stat cards in profile page
     - Modified useSwipe to be compatible with the new profile page
 
+## [0.4.1-beta] - 2023-1-6
+
+### Changed
+
+    - Changed API endpoints to support latest server changes
+
 ## PLANNED TODOS
 
     - Add bio

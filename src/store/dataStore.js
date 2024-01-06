@@ -47,7 +47,7 @@ const useDataStore = create((set, get) => ({
         }));
 
         axios
-            .put(`/feedback/toggleLike`, { videoKey })
+            .put(`/feedback/toggle/${videoKey}`)
             .catch((err) => {
                 console.error(err);
 

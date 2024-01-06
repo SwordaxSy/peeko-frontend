@@ -39,7 +39,7 @@ const VideoData = ({ videoKey, mobileComments }) => {
         setCommentEnabled(false);
 
         axios
-            .post(`/comment/postComment`, { videoKey, comment })
+            .post(`/comment/post`, { videoKey, comment })
             .then(({ data }) => {
                 if (data.success) {
                     pushComment(data.commentDocument);
@@ -68,7 +68,7 @@ const VideoData = ({ videoKey, mobileComments }) => {
     // fetch video data
     useEffect(() => {
         const requests = [
-            axios.get(`/video/getVideo/${videoKey}`),
+            axios.get(`/video/get/${videoKey}`),
             axios.get(`/comment/getComments/${videoKey}`),
         ];
 

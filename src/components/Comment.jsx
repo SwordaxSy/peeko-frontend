@@ -34,7 +34,7 @@ const Comment = ({ commentDocument }) => {
         if (!approval) return;
 
         axios
-            .delete(`/comment/deleteComment/${commentDocument._id}`)
+            .delete(`/comment/delete/${commentDocument._id}`)
             .then(({ data }) => {
                 if (data.success) {
                     setComments(

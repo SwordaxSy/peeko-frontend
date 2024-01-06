@@ -77,7 +77,7 @@ const PostVideo = ({ video, previewVideo }) => {
         formData.append("videoFile", videoFile);
 
         axios
-            .post(`/video/uploadVideo`, formData)
+            .post(`/video/upload`, formData)
             .then(({ data }) => {
                 if (data.success) {
                     activateAlert("Video posted", "success");

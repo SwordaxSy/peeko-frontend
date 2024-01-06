@@ -29,7 +29,7 @@ const Profile = () => {
 
     useEffect(() => {
         axios
-            .get(`/user/getUser/${username}`)
+            .get(`/user/get/${username}`)
             .then(({ data }) => {
                 if (data.success) {
                     setUserData(data);
